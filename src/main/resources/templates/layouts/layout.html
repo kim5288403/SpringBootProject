@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lagn="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- 공통 헤드-->
+<th:block th:replace="layouts/fragments/head :: headFragment"></th:block>
+<!-- head -->
+<th:block layout:fragment="head"></th:block>
+<body class="is-preload">
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Main -->
+		<div id="main">
+			<div class="inner">
+
+				<!-- 상단바-->
+				<th:block th:replace="layouts/fragments/top :: topbarFragment"></th:block>
+				
+				<!-- 본문 -->
+				<th:block layout:fragment="content"></th:block>
+				
+			</div>
+		</div>
+			<!-- 사이드바 -->
+			<th:block th:replace="layouts/fragments/sidebar :: sidebarFragment"></th:block>
+	</div>
+
+	<!-- 공통 스크립트-->
+	<th:block th:replace="layouts/fragments/script :: scriptFragment"></th:block>
+	 <!-- 스크립트-->
+	<th:block layout:fragment="script"></th:block>
+</body>
+</html>

@@ -43,7 +43,8 @@ public class MemberController {
     
     @PostMapping(value = "join")
     public String join(@Valid MemberDto memberDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+        
+    	if (bindingResult.hasErrors()) {
             return "/member/join";
         }
        	

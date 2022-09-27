@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.Board.dto.MemberDto;
 import com.example.Board.entity.Member;
 import com.example.Board.entity.MemberRepository;
 

@@ -13,9 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.example.Board.auth.CustomAuthenticationEntryPoint;
+import com.example.Board.filter.JwtAuthenticationFilter;
 import com.example.Board.jwt.JwtTokenProvider;
 import com.example.Board.model.MemberService;
 
@@ -47,33 +49,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.authorizeRequests()
+		.antMatchers("/test").authenticated()
 		.antMatchers(HttpMethod.OPTIONS, "api/member/**").permitAll()
-		.antMatchers("/api/member/**","/member/**").permitAll()
+		.antMatchers("/api/member/**", "/member/**", "/", "/assets/**", "/h2-console/**").permitAll()
+		.antMatchers("/admin/**").hasRole("ADMIN")
 		.and()
+		.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 		.formLogin().disable();
-
-		//		http
-		//		.formLogin()
-		//		.loginPage("/member/login")
-		//		.defaultSuccessUrl("/")
-		//		.usernameParameter("email")
-		//		.failureUrl("/member/login/error")
-		//		.and()
-		//		.logout()
-		//		.logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-		//		.logoutSuccessUrl("/");
-
-		//		http
-		//		.authorizeRequests()
-		//		.mvcMatchers("/", "/member/**", "/assets/**", "/h2-console/**").permitAll()
-		//		.mvcMatchers("/admin/**").hasRole("ADMIN")
-		//		.anyRequest().authenticated()
-		//		;
-		//
-		//		http
-		//		.exceptionHandling()
-		//		.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-		//		;
+		
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
+		http
+		 .exceptionHandling()
+		 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+		;
 
 	}
 

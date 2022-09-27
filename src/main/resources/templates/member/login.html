@@ -15,8 +15,7 @@
 	<section>
 
 		<div class="row aln-center gtr-1 gtr-uniform">
-			<form role="form" method="post" th:action="@{/member/login}">
-			 	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+			<form role="form" id="loginForm" method="post" th:action="@{/member/login}">
 				<div class="col-6 col-12-medium">
 					<label th:for="email">Email</label>
 	            	<input type="email" name="email" class="form-control" placeholder="이메일을 입력해주세요">
@@ -30,8 +29,8 @@
 				<p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
 				
 				<div class="col-6 col-12-medium" style="margin-top: 20px;">
-					<button type="submit" class="button primary fit">로그인</button>
-					<a href="member/join" class="button fit">회원가입</a>
+					<button type="button" id="loginButton" class="button primary fit">로그인</button>
+					<a href="/member/join" class="button fit">회원가입</a>
 					<a href="https://kauth.kakao.com/oauth/authorize?client_id=5c78ab9195c6750c34b1a2fd56ad0da1&redirect_uri=http://localhost:8080/member/kakao&response_type=code" 
 					style="border-bottom:none;">
 	  					<img th:src="@{/images/kakao_login_large_wide.png}" style="height:45px; width:100%; object-fit:cover; "/>
@@ -46,10 +45,37 @@
 <th:block layout:fragment="script">
    <script th:inline="javascript">
         $(document).ready(function(){
-            var errorMessage = [[${errorMessage}]];
-            if(errorMessage != null){
-                alert(errorMessage);
-            }
+        	
+        	$("#loginButton").click(function() {
+        		 let formData = $("form[id=loginForm]").serializeArray();
+            	 let obj = {};
+            	 
+            	 for (let i = 0; i < formData.length; i++) {
+            		 obj[formData[i]['name']] = formData[i]['value'];
+            	 }
+        		
+        		$.ajax({
+        			url : "/api/member/login",
+        			method : "post",
+        			data: JSON.stringify(obj),
+            		contentType:'application/json;charset=utf-8',
+            		dataType:'json',
+            		success : function(result) {
+            			let code = result.statusCode;
+    					let message = result.responseMessage;   
+						alert(message);
+
+            			if (code == 200) { 
+            				
+    					}
+        			},
+        			error : function(error) {
+        			}
+        		});
+        		
+        		
+        	});
+          
         });
     </script>
 </th:block>

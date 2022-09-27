@@ -11,7 +11,7 @@
 </th:block>
 <th:block layout:fragment="content">
 	<section>
-		<form id="joinForm"th:action="@{/member/join}" action="#" role="form" method="post"
+		<form id="joinForm" th:action="@{/member/join}" action="#" role="form" method="post"
 			enctype="multipart/form-data" th:object="${memberDto}">
 
 			<div class="row gtr-uniform">
@@ -69,12 +69,7 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-	 $(document).ready(function(){
-         var errorMessage = [[${errorMessage}]];
-         if(errorMessage != null){
-             alert(errorMessage);
-         }
-         
+	 $(document).ready(function(){  
          $("#demo-priority-mail").attr("checked", true);
          
          $("#joinButton").click(function() {
@@ -92,10 +87,17 @@
         		 contentType:'application/json;charset=utf-8',
         		 dataType:'json',
         		 success : function(result) {
-        			 console.log(result);
+        			let code = result.statusCode;
+					let message = result.responseMessage;
+					alert(message);	
+					if (code == 201) { 
+						window.location.href = "/member/login"
+					}
+					
+					
         		 },
         		 error : function(error) {
-        			 alert("gd1");
+        			 
         		 }
         	 })
         	 

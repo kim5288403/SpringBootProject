@@ -8,11 +8,11 @@
 			<a href="/" class="logo"><strong>Editorial</strong> by HTML5 UP</a>
 			
 			<ul class="icons">
-				<li sec:authorize="isAnonymous()"><a href="/member/login">login</a></li>
-				<li sec:authorize="isAnonymous()"><a href="/member/join">join</a></li>
-				<li sec:authorize="isAuthenticated()"><a href="#">마이페이지</a></li>
-				<li sec:authorize="isAuthenticated()"><a href="#">장바구니</a></li>
-				<li sec:authorize="isAuthenticated()"><a href="/member/logout">로그아웃</a></li>
+				<li class="logoutMemu"><a href="/member/login">Login</a></li>
+				<li class="logoutMemu"><a href="/member/join">Join</a></li>
+				<li class="loginMemu"><a href="#">MyPage</a></li>
+				<li class="loginMemu"><a href="#">Cart</a></li>
+				<li class="loginMemu"><a href="/member/logout">Logout</a></li>
 			</ul>
 			
 		</header>

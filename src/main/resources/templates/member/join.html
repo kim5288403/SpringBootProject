@@ -3,55 +3,33 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layouts/layout}">
 <th:block layout:fragment="head">
-<style>
-	.fieldError {
-		color: #bd2130;
-	}
-</style>
 </th:block>
+
 <th:block layout:fragment="content">
 	<section>
-		<form id="joinForm" th:action="@{/member/join}" action="#" role="form" method="post"
-			enctype="multipart/form-data" th:object="${memberDto}">
+		<form id="joinForm" action="#" role="form" method="post">
 
 			<div class="row gtr-uniform">
 				<div class="col-6 col-12-xsmall">
-					<label th:for="name">이름</label> <input type="text" name="name"
-						id="name" th:field="*{name}" class="form-control"
-						placeholder="이름을 입력해주세요">
-					<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-						class="fieldError">Incorrect data</p>
+					<label th:for="name">이름</label> <input type="text" name="name" id="name" class="form-control" placeholder="이름을 입력해주세요">
+				</div>
+				<div class="col-6 col-12-xsmall">
+					<label th:for="email">이메일주소</label> <input type="email" class="form-control" placeholder="이메일을 입력해주세요">
 				</div>
 
 				<div class="col-6 col-12-xsmall">
-					<label th:for="email">이메일주소</label> <input type="email"
-						th:field="*{email}" class="form-control" placeholder="이메일을 입력해주세요">
-					<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-						class="fieldError">Incorrect data</p>
+					<label th:for="password">비밀번호</label> <input type="password" class="form-control" placeholder="비밀번호 입력">
 				</div>
 
 				<div class="col-6 col-12-xsmall">
-					<label th:for="password">비밀번호</label> <input type="password"
-						th:field="*{password}" class="form-control" placeholder="비밀번호 입력">
-					<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-						class="fieldError">Incorrect data</p>
-				</div>
-
-				<div class="col-6 col-12-xsmall">
-					<label th:for="address">주소</label> <input type="text"
-						th:field="*{address}" class="form-control"
-						placeholder="주소를 입력해주세요">
-					<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
-						class="fieldError">Incorrect data</p>
+					<label th:for="address">주소</label> <input type="text" class="form-control" placeholder="주소를 입력해주세요">
 				</div>
 
 				<div class="col-6 col-12-xsmall">
 					<label th:for="gender">성별</label> 
-					
-					<input type="radio" th:field="*{gender}" id="demo-priority-mail" name="demo-priority" value="남"> 
+					<input type="radio" id="demo-priority-mail" name="demo-priority" value="남"> 
 					<label for="demo-priority-mail">남</label>
-					
-					<input type="radio" th:field="*{gender}" id="demo-priority-femail" name="demo-priority" value="여">
+					<input type="radio" id="demo-priority-femail" name="demo-priority" value="여">
 					<label for="demo-priority-femail">여</label>
 				</div>
 

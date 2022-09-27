@@ -4,18 +4,13 @@
 	layout:decorate="~{layouts/layout}">
 	
 <th:block layout:fragment="head">
-    <style>
-        .error {
-            color: #bd2130;
-        }
-    </style>
 </th:block>
 
 <th:block layout:fragment="content">
 	<section>
 
 		<div class="row aln-center gtr-1 gtr-uniform">
-			<form role="form" id="loginForm" method="post" th:action="@{/member/login}">
+			<form role="form" id="loginForm" method="post">
 				<div class="col-6 col-12-medium">
 					<label th:for="email">Email</label>
 	            	<input type="email" name="email" class="form-control" placeholder="이메일을 입력해주세요">
@@ -25,8 +20,6 @@
 				 	<label th:for="password">password</label>
 	            	<input type="password" name="password" class="form-control" placeholder="비밀번호 입력">
 				</div>
-				
-				<p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
 				
 				<div class="col-6 col-12-medium" style="margin-top: 20px;">
 					<button type="button" id="loginButton" class="button primary fit">로그인</button>
@@ -66,7 +59,7 @@
 						alert(message);
 
             			if (code == 200) { 
-            				
+            				window.location.href = "/"
     					}
         			},
         			error : function(error) {

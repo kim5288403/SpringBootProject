@@ -5,6 +5,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.example.Board.entity.Member;
+import com.example.Board.enums.Gender;
+import com.example.Board.enums.MemberRole;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MemberDto {
+public class MemberRequestDto {
 
 	@NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
@@ -33,11 +38,24 @@ public class MemberDto {
     private String address;
 
     @Builder
-    public MemberDto(String name, String email, String password, String address, String gender) {
+    public MemberRequestDto(String name, String email, String password, String address, String gender) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.gender = gender;
         this.address = address;
+    }
+    
+
+    public static Member create (MemberRequestDto memberDto, PasswordEncoder passwordEncoder) {
+        Member member = Member.builder()
+                .name(memberDto.getName())
+                .email(memberDto.getEmail())
+                .gender(memberDto.getGender().equals("남") ? Gender.남 : Gender.여)
+                .address(memberDto.getAddress())
+                .password(passwordEncoder.encode(memberDto.getPassword()))  //암호화처리
+                .role(MemberRole.USER)
+                .build();
+        return member;
     }
 }

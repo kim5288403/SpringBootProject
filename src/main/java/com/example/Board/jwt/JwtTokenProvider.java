@@ -28,6 +28,7 @@ public class JwtTokenProvider {
 
 	// 토큰 유효시간 30분
 	private long tokenValidTime = 30 * 60 * 1000L;
+	private long RefreshtokenValidTime = 30 * 60 * 5000L;
 
 	private final UserDetailsService userDetailsService;
 
@@ -48,6 +49,16 @@ public class JwtTokenProvider {
 				.setExpiration(new Date(now.getTime() + tokenValidTime)) // set Expire Time
 				.signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과
 				// signature 에 들어갈 secret값 세팅
+				.compact();
+	}
+
+	// JWT Refresh 토큰 생성
+	public String createRefreshToken() {
+		Date now = new Date();
+		return Jwts.builder()
+				.setIssuedAt(now)
+				.setExpiration(new Date(now.getTime() + RefreshtokenValidTime))
+				.signWith(SignatureAlgorithm.HS256, secretKey)
 				.compact();
 	}
 

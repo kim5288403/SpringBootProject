@@ -36,7 +36,7 @@ public class Board {
     private LocalDateTime modifiedDate; // 수정일
 
     @Builder
-    public Board(String title, String content, String writer, int hits, char deleteYn) {
+    public Board (String title, String content, String writer, int hits, char deleteYn) {
         this.title = title;
         this.content = content;
         this.writer = writer;

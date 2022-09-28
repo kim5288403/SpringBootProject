@@ -9,9 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.example.Board.dto.MemberDto;
 import com.example.Board.enums.Gender;
 import com.example.Board.enums.MemberRole;
 
@@ -44,7 +41,7 @@ public class Member {
     private MemberRole role;
 
     @Builder
-    public Member(String name, String email, String password, String address, MemberRole role, Gender gender) {
+    public Member (String name, String email, String password, String address, MemberRole role, Gender gender) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -53,15 +50,4 @@ public class Member {
         this.role = role;
     }
 
-    public static Member create(MemberDto memberDto, PasswordEncoder passwordEncoder) {
-        Member member = Member.builder()
-                .name(memberDto.getName())
-                .email(memberDto.getEmail())
-                .gender(memberDto.getGender().equals("남") ? Gender.남 : Gender.여)
-                .address(memberDto.getAddress())
-                .password(passwordEncoder.encode(memberDto.getPassword()))  //암호화처리
-                .role(MemberRole.USER)
-                .build();
-        return member;
-    }
 }

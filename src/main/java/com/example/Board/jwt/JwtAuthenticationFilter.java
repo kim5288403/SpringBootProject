@@ -1,4 +1,4 @@
-package com.example.Board.filter;
+package com.example.Board.jwt;
 
 import java.io.IOException;
 
@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
-
-import com.example.Board.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Board.dto.LoginDto;
-import com.example.Board.dto.MemberDto;
+import com.example.Board.dto.LoginRequestDto;
+import com.example.Board.dto.LoginResponseDto;
+import com.example.Board.dto.MemberRequestDto;
+import com.example.Board.dto.MemberResponseDto;
 import com.example.Board.entity.Member;
 import com.example.Board.jwt.JwtTokenProvider;
 import com.example.Board.model.MemberService;
@@ -35,32 +37,32 @@ public class MemberApiContorller {
     private final JwtTokenProvider jwtTokenProvider;
     
 	@PostMapping(value = "join")
-	public ResponseEntity<RestResponse<MemberDto>> join(@Valid @RequestBody MemberDto memberDto, BindingResult bindingResult) {
+	public ResponseEntity<RestResponse<MemberResponseDto>> join(@Valid @RequestBody MemberRequestDto memberDto, BindingResult bindingResult) {
 		log.info("회원가입 시도됨");
 		
 		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<RestResponse<MemberDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.INPUT_ERROR, memberDto), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.INPUT_ERROR, new MemberResponseDto(memberDto)), HttpStatus.OK);
         }
 		
 		try {
-	        Member member = Member.create(memberDto, passwordEncoder);
+	        Member member = MemberRequestDto.create(memberDto, passwordEncoder);
 	        memberService.save(member);
 		}catch (Exception e) {
-			return new ResponseEntity<RestResponse<MemberDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.DUPLICATION_USER , memberDto), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.DUPLICATION_USER , new MemberResponseDto(memberDto)), HttpStatus.OK);
 		}
 
-		return new ResponseEntity<RestResponse<MemberDto>>(RestResponse.res(StatusCode.CREATED, ResponseMessage.CREATED_USER , memberDto), HttpStatus.OK);
+		return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.CREATED, ResponseMessage.CREATED_USER , new MemberResponseDto(memberDto)), HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "login")
-	public ResponseEntity<RestResponse<LoginDto>> login(@RequestBody LoginDto loginDto) {
+	public ResponseEntity<RestResponse<LoginResponseDto>> login(@RequestBody LoginRequestDto loginDto) {
 		log.info("로그인 시도됨");
 		
 		try {
-			LoginDto loginInfo = memberService.login(loginDto, passwordEncoder, jwtTokenProvider);
-			return new ResponseEntity<RestResponse<LoginDto>>(RestResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, loginInfo), HttpStatus.OK);	
+			LoginResponseDto loginResponseDto = memberService.login(loginDto, passwordEncoder, jwtTokenProvider);
+			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, loginResponseDto), HttpStatus.OK);	
 		} catch (Exception e) {
-			return new ResponseEntity<RestResponse<LoginDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_FAIL, loginDto), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_FAIL, new LoginResponseDto(loginDto.getEmail(),"" , "")), HttpStatus.OK);
 		}
 	}
 	

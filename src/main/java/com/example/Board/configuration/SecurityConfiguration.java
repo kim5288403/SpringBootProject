@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.example.Board.auth.CustomAuthenticationEntryPoint;
-import com.example.Board.filter.JwtAuthenticationFilter;
+import com.example.Board.jwt.JwtAuthenticationFilter;
 import com.example.Board.jwt.JwtTokenProvider;
 import com.example.Board.model.MemberService;
 

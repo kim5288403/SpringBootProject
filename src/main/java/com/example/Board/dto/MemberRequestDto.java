@@ -45,10 +45,9 @@ public class MemberRequestDto {
         this.gender = gender;
         this.address = address;
     }
-    
 
     public static Member create (MemberRequestDto memberDto, PasswordEncoder passwordEncoder) {
-        Member member = Member.builder()
+    	return Member.builder()
                 .name(memberDto.getName())
                 .email(memberDto.getEmail())
                 .gender(memberDto.getGender().equals("남") ? Gender.남 : Gender.여)
@@ -56,6 +55,5 @@ public class MemberRequestDto {
                 .password(passwordEncoder.encode(memberDto.getPassword()))  //암호화처리
                 .role(MemberRole.USER)
                 .build();
-        return member;
     }
 }

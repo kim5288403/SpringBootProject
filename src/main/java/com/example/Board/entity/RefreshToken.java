@@ -26,9 +26,14 @@ public class RefreshToken {
 	private LocalDateTime modifiedDate;
 	
 	@Builder
-	public RefreshToken (Long memberId, String refreshToken, LocalDateTime modifiedDate) {
+	public RefreshToken (Long memberId, String refreshToken) {
 		this.memberId = memberId;
 		this.refreshToken = refreshToken;
-		this.modifiedDate = modifiedDate;
 	}
+	
+	public void update(String refreshToken) {
+		this.refreshToken = refreshToken;
+		this.modifiedDate = LocalDateTime.now();
+	}
+	
 }

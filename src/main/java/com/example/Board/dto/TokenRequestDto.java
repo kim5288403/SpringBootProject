@@ -27,12 +27,10 @@ public class TokenRequestDto {
     }
     
 	public static RefreshToken create (Long memberId, String refreshToken ) {
-		RefreshToken refreshTokenEntity = RefreshToken.builder()
+		return RefreshToken.builder()
 				.memberId(memberId)
 				.refreshToken(refreshToken)
 				.build();
-		return refreshTokenEntity;
 	}
-	
 	
 }

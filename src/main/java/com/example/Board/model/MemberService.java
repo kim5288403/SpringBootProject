@@ -61,11 +61,11 @@ public class MemberService implements UserDetailsService{
 		Member member = memberRepository.findByEmail(loginDto.getEmail());
 		validateDuplicateMemberLogin(member, loginDto, passwordEncoder);
 
-		RefreshToken refreshTokenEntity = TokenRequestDto.create(member.getId(), jwtTokenProvider.createRefreshToken());
+		RefreshToken refreshTokenEntity = TokenRequestDto.create(member.getId(), jwtTokenProvider.createRefreshToken(member.getId()+""));
 		refreshTokenRepository.save(refreshTokenEntity);
 
 		String token = jwtTokenProvider.createToken(member.getEmail(), member.getRole()+"");
-		String refreshToken = jwtTokenProvider.createRefreshToken();
+		String refreshToken = jwtTokenProvider.createRefreshToken(member.getId()+"");
 
 		return new LoginResponseDto(loginDto.getEmail(), token,  refreshToken);
 	}
@@ -79,6 +79,6 @@ public class MemberService implements UserDetailsService{
 		if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
 			throw new BadCredentialsException("비밀번호 불일치 : " + member.getPassword());
 		}
-
 	}
+	
 }

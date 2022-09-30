@@ -1,14 +1,17 @@
 package com.example.Board.controller;
 
 
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +39,7 @@ public class MemberApiContorller {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     
+	
 	@PostMapping(value = "join")
 	public ResponseEntity<RestResponse<MemberResponseDto>> join(@Valid @RequestBody MemberRequestDto memberDto, BindingResult bindingResult) {
 		log.info("회원가입 시도됨");
@@ -48,7 +52,7 @@ public class MemberApiContorller {
 	        Member member = MemberRequestDto.create(memberDto, passwordEncoder);
 	        memberService.save(member);
 		}catch (Exception e) {
-			return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.DUPLICATION_USER , new MemberResponseDto(memberDto)), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.DUPLICATION_USER+e.getMessage() , new MemberResponseDto(memberDto)), HttpStatus.OK);
 		}
 
 		return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.CREATED, ResponseMessage.CREATED_USER , new MemberResponseDto(memberDto)), HttpStatus.OK);
@@ -62,8 +66,18 @@ public class MemberApiContorller {
 			LoginResponseDto loginResponseDto = memberService.login(loginDto, passwordEncoder, jwtTokenProvider);
 			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, loginResponseDto), HttpStatus.OK);	
 		} catch (Exception e) {
-			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_FAIL, new LoginResponseDto(loginDto.getEmail(),"" , "")), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_FAIL+e.getMessage(), new LoginResponseDto(loginDto.getEmail(),"" , "")), HttpStatus.OK);
 		}
+	}
+	
+	@GetMapping(value = "logout") 
+	public <T> ResponseEntity<RestResponse<T>> logout (@RequestHeader(value="Authorization") String accessToken) {
+		try {
+			memberService.logout(accessToken, jwtTokenProvider);
+		} catch (Exception e) {
+			return new ResponseEntity<RestResponse<T>>(RestResponse.res(400, "gd"),HttpStatus.OK);
+		}
+		return new ResponseEntity<RestResponse<T>>(RestResponse.res(400, "gd"),HttpStatus.OK);
 	}
 	
 }

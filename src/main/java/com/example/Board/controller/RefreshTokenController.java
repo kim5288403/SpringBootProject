@@ -12,7 +12,6 @@ import com.example.Board.model.TokenService;
 import com.example.Board.restfull.RestResponse;
 import com.example.Board.restfull.StatusCode;
 
-import ch.qos.logback.core.status.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 public class RefreshTokenController {
-	
 	private final TokenService tokenService;
-	
 	
 	@PostMapping(value = "/refresh") 
 	public  ResponseEntity<RestResponse<TokenResponseDto>> refresh(@RequestHeader(value="RefreshToken") String refreshToken) {
@@ -32,7 +29,7 @@ public class RefreshTokenController {
 			TokenResponseDto tokenResponseDto = tokenService.refresh(refreshToken);
 			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.OK, "재발급 성공하였습니다.", tokenResponseDto),HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, "재발급 실패하였습니다."),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, "재발급 실패하였습니다."+e.getMessage()),HttpStatus.BAD_REQUEST);
 		}
 
 	}

@@ -1,5 +1,6 @@
 package com.example.Board.model;
 
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.Board.auth.RedisUtil;
 import com.example.Board.dto.LoginRequestDto;
 import com.example.Board.dto.LoginResponseDto;
 import com.example.Board.dto.TokenRequestDto;
@@ -17,6 +19,7 @@ import com.example.Board.entity.MemberRepository;
 import com.example.Board.entity.RefreshToken;
 import com.example.Board.entity.RefreshTokenRepository;
 import com.example.Board.jwt.JwtTokenProvider;
+import com.example.Board.restfull.RestResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +30,7 @@ public class MemberService implements UserDetailsService{
 
 	private final MemberRepository memberRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
+	private final RedisUtil redisUtil;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -52,7 +56,7 @@ public class MemberService implements UserDetailsService{
 	private void validateDuplicateMember(Member member) {
 		Member findMember = memberRepository.findByEmail(member.getEmail());
 		if (findMember != null) {
-			throw new IllegalStateException("이미 가입된 회원입니다.");
+			throw new IllegalStateException(" 이미 가입된 회원입니다.");
 		}
 	}
 
@@ -73,12 +77,23 @@ public class MemberService implements UserDetailsService{
 
 	private void validateDuplicateMemberLogin(Member member, LoginRequestDto loginDto, PasswordEncoder passwordEncoder) {
 		if (member == null) {
-			throw new BadCredentialsException("이메일 불일치 : " + loginDto.getEmail());
+			throw new BadCredentialsException(" 이메일 불일치 : " + loginDto.getEmail());
 		}
 
 		if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-			throw new BadCredentialsException("비밀번호 불일치 : " + member.getPassword());
+			throw new BadCredentialsException(" 비밀번호 불일치 : " + member.getPassword());
 		}
 	}
 	
+	//로그아웃
+	public <T> RestResponse<T> logout(String accessToken, JwtTokenProvider jwtTokenProvider) {
+		if (jwtTokenProvider.validateToken(accessToken)) {
+			Member member = memberRepository.findByEmail(jwtTokenProvider.getUserPk(accessToken));
+			refreshTokenRepository.deleteById(member.getId());
+			redisUtil.setBlackList(accessToken, "access_token", 30 * 60 * 1000L);
+		}else {
+		}
+		return RestResponse.res(400, "gd");
+	}
+
 }

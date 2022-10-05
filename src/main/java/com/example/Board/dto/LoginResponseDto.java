@@ -12,14 +12,14 @@ import lombok.Setter;
 public class LoginResponseDto {
 	private String email;
 	
-	private String token;
+	private String accessToken;
 
-	private String Refreshtoken;
+	private String refreshToken;
 	
 	@Builder
-    public LoginResponseDto(String email, String token, String Refreshtoken) {
+    public LoginResponseDto(String email, String accessToken, String refreshToken) {
         this.email = email;
-        this.token = token;
-        this.Refreshtoken = Refreshtoken;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }

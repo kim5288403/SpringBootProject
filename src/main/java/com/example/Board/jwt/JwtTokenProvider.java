@@ -20,14 +20,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 
-//토큰을 생성하고 검증하는 클래스입니다.
-//해당 컴포넌트는 필터클래스에서 사전 검증을 거칩니다.
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
 	private String secretKey = "myprojectsecret";
 
-	private long tokenValidTime = 30 * 60 * 1000L;
+	private long accessTokenValidTime = 30 * 60 * 1000L;
 	private long RefreshtokenValidTime = 30 * 60 * 5000L;
 	private final RedisUtil redisUtil;
 	private final UserDetailsService userDetailsService;
@@ -37,16 +35,15 @@ public class JwtTokenProvider {
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
 	}
 
-	public String createToken(String userPk, String roles) {
-		Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
-		claims.put("roles", roles); // 정보는 key / value 쌍으로 저장된다.
+	public String createAccessToken(String userPk, String roles) {
+		Claims claims = Jwts.claims().setSubject(userPk);
+		claims.put("roles", roles);
 		Date now = new Date();
 		return Jwts.builder()
-				.setClaims(claims) // 정보 저장
-				.setIssuedAt(now) // 토큰 발행 시간 정보
-				.setExpiration(new Date(now.getTime() + tokenValidTime)) // set Expire Time
-				.signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과
-				// signature 에 들어갈 secret값 세팅
+				.setClaims(claims)
+				.setIssuedAt(now)
+				.setExpiration(new Date(now.getTime() + accessTokenValidTime))
+				.signWith(SignatureAlgorithm.HS256, secretKey)
 				.compact();
 	}
 
@@ -70,8 +67,8 @@ public class JwtTokenProvider {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
-	public String resolveToken(HttpServletRequest request) {
-		return request.getHeader("Authorization");
+	public String resolveAccessToken(HttpServletRequest request) {
+		return request.getHeader("Authorization").replace("Bearer ", "");
 	}
 	
 	public String resolveRefreshToken(HttpServletRequest request) {

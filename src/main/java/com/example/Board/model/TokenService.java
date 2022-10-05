@@ -2,7 +2,6 @@ package com.example.Board.model;
 
 import java.util.Optional;
 
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +35,7 @@ public class TokenService {
 			throw new IllegalStateException(" 존재하지 않는 정보입니다.");
 		} else {
 			Optional<Member> member = memberRepository.findById(MemberId);
-			String accessToken = jwtTokenProvider.createToken(member.get().getEmail(), member.get().getRole()+"");
+			String accessToken = jwtTokenProvider.createAccessToken(member.get().getEmail(), member.get().getRole()+"");
 			String refreshToken = jwtTokenProvider.createRefreshToken(member.get().getId()+"");
 			refreshTokenEntity.update(refreshToken);
 			

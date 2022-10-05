@@ -64,24 +64,24 @@ public class MemberService implements UserDetailsService{
 	public LoginResponseDto login(LoginRequestDto loginDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
 		Member member = memberRepository.findByEmail(loginDto.getEmail());
 		validateDuplicateMemberLogin(member, loginDto, passwordEncoder);
-
-		RefreshToken refreshTokenEntity = TokenRequestDto.create(member.getId(), jwtTokenProvider.createRefreshToken(member.getId()+""));
+		
+		String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getRole()+"");
+		String refreshToken = jwtTokenProvider.createRefreshToken(member.getId()+"");
+		
+		RefreshToken refreshTokenEntity = TokenRequestDto.create(member.getId(), refreshToken);
 		refreshTokenRepository.save(refreshTokenEntity);
 
-		String token = jwtTokenProvider.createToken(member.getEmail(), member.getRole()+"");
-		String refreshToken = jwtTokenProvider.createRefreshToken(member.getId()+"");
-
-		return new LoginResponseDto(loginDto.getEmail(), token,  refreshToken);
+		return new LoginResponseDto(loginDto.getEmail(), accessToken,  refreshToken);
 	}
 
 
 	private void validateDuplicateMemberLogin(Member member, LoginRequestDto loginDto, PasswordEncoder passwordEncoder) {
 		if (member == null) {
-			throw new BadCredentialsException(" 이메일 불일치 : " + loginDto.getEmail());
+			throw new BadCredentialsException("이메일 불일치");
 		}
 
 		if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-			throw new BadCredentialsException(" 비밀번호 불일치 : " + member.getPassword());
+			throw new BadCredentialsException("비밀번호 불일치");
 		}
 	}
 	
@@ -91,9 +91,10 @@ public class MemberService implements UserDetailsService{
 			Member member = memberRepository.findByEmail(jwtTokenProvider.getUserPk(accessToken));
 			refreshTokenRepository.deleteById(member.getId());
 			redisUtil.setBlackList(accessToken, "access_token", 30 * 60 * 1000L);
+			return RestResponse.res(200, "로그아웃 성공");
 		}else {
+			return RestResponse.res(401, "유효하지않은 토큰입니다.");
 		}
-		return RestResponse.res(400, "gd");
 	}
 
 }

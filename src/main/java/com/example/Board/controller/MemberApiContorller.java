@@ -61,23 +61,23 @@ public class MemberApiContorller {
 	@PostMapping(value = "login")
 	public ResponseEntity<RestResponse<LoginResponseDto>> login(@RequestBody LoginRequestDto loginDto) {
 		log.info("로그인 시도됨");
-		
+
 		try {
 			LoginResponseDto loginResponseDto = memberService.login(loginDto, passwordEncoder, jwtTokenProvider);
 			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, loginResponseDto), HttpStatus.OK);	
 		} catch (Exception e) {
-			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.LOGIN_FAIL+e.getMessage(), new LoginResponseDto(loginDto.getEmail(),"" , "")), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping(value = "logout") 
 	public <T> ResponseEntity<RestResponse<T>> logout (@RequestHeader(value="Authorization") String accessToken) {
 		try {
-			memberService.logout(accessToken, jwtTokenProvider);
+			RestResponse<T> res = memberService.logout(accessToken, jwtTokenProvider);
+			return new ResponseEntity<RestResponse<T>>(RestResponse.res(200, res.getResponseMessage()), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<RestResponse<T>>(RestResponse.res(400, "gd"),HttpStatus.OK);
+			return new ResponseEntity<RestResponse<T>>(RestResponse.res(400, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<RestResponse<T>>(RestResponse.res(400, "gd"),HttpStatus.OK);
 	}
 	
 }

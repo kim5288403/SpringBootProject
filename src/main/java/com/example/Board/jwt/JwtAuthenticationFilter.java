@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.example.Board.restfull.RestResponse;
+import com.example.Board.restfull.StatusCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String servletPath = ((HttpServletRequest) request).getServletPath();
-		
 
 		if (servletPath.equals("/api/token/refresh") || servletPath.equals("/api/member/login")) {
 			chain.doFilter(request, response);
@@ -43,11 +43,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				response.setCharacterEncoding("utf-8");
 				
 				if (refreshToken != null && jwtTokenProvider.validateToken(refreshToken)) {
-					RestResponse<Object> RestreSponse = new RestResponse<Object>(400, "access token 유효기간이 지났습니다.");
+					RestResponse<Object> RestreSponse = new RestResponse<Object>(StatusCode.BAD_REQUEST, "access token 유효기간이 지났습니다.");
 					new ObjectMapper().writeValue(response.getWriter(), RestreSponse);
 				} 
 				else if (refreshToken != null && !jwtTokenProvider.validateToken(refreshToken)) {
-					RestResponse<Object> RestreSponse = new RestResponse<Object>(400, "다시 로그인을  해주세요.");
+					RestResponse<Object> RestreSponse = new RestResponse<Object>(StatusCode.BAD_REQUEST, "다시 로그인을 해주세요.");
 					new ObjectMapper().writeValue(response.getWriter(), RestreSponse);
 				}
 				

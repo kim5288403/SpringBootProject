@@ -52,7 +52,7 @@ public class MemberApiContorller {
 	        Member member = MemberRequestDto.create(memberDto, passwordEncoder);
 	        memberService.save(member);
 		}catch (Exception e) {
-			return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, ResponseMessage.DUPLICATION_USER+e.getMessage() , new MemberResponseDto(memberDto)), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage(), new MemberResponseDto(memberDto)), HttpStatus.OK);
 		}
 
 		return new ResponseEntity<RestResponse<MemberResponseDto>>(RestResponse.res(StatusCode.CREATED, ResponseMessage.CREATED_USER , new MemberResponseDto(memberDto)), HttpStatus.OK);
@@ -74,9 +74,9 @@ public class MemberApiContorller {
 	public <T> ResponseEntity<RestResponse<T>> logout (@RequestHeader(value="Authorization") String accessToken) {
 		try {
 			RestResponse<T> res = memberService.logout(accessToken, jwtTokenProvider);
-			return new ResponseEntity<RestResponse<T>>(RestResponse.res(200, res.getResponseMessage()), HttpStatus.OK);
+			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.OK, res.getResponseMessage()), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<RestResponse<T>>(RestResponse.res(400, e.getMessage()), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 	}
 	

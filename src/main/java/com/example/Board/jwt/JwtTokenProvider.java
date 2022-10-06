@@ -66,6 +66,10 @@ public class JwtTokenProvider {
 	public String getUserPk(String token) {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
 	}
+	
+	public Date getUserExpiration(String token) {
+		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+	}
 
 	public String resolveAccessToken(HttpServletRequest request) {
 		return request.getHeader("Authorization").replace("Bearer ", "");

@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/token")
 @RestController
 @RequiredArgsConstructor
-public class RefreshTokenController {
+public class TokenController {
 	private final TokenService tokenService;
 	
 	@PostMapping(value = "/refresh") 
@@ -27,9 +27,9 @@ public class RefreshTokenController {
 		log.info("accessToken 재발급 시도됨");
 		try {
 			TokenResponseDto tokenResponseDto = tokenService.refresh(refreshToken);
-			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.OK, "재발급 성공하였습니다.", tokenResponseDto),HttpStatus.OK);
+			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.OK, "재발급 성공하였습니다.", tokenResponseDto), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, "재발급 실패하였습니다."+e.getMessage()),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 
 	}

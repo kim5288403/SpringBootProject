@@ -1,6 +1,9 @@
 package com.example.Board.model;
 
 
+
+import java.util.Date;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +23,7 @@ import com.example.Board.entity.RefreshToken;
 import com.example.Board.entity.RefreshTokenRepository;
 import com.example.Board.jwt.JwtTokenProvider;
 import com.example.Board.restfull.RestResponse;
+import com.example.Board.restfull.StatusCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,7 +60,7 @@ public class MemberService implements UserDetailsService{
 	private void validateDuplicateMember(Member member) {
 		Member findMember = memberRepository.findByEmail(member.getEmail());
 		if (findMember != null) {
-			throw new IllegalStateException(" 이미 가입된 회원입니다.");
+			throw new IllegalStateException("이미 가입된 회원입니다.");
 		}
 	}
 
@@ -90,10 +94,13 @@ public class MemberService implements UserDetailsService{
 		if (jwtTokenProvider.validateToken(accessToken)) {
 			Member member = memberRepository.findByEmail(jwtTokenProvider.getUserPk(accessToken));
 			refreshTokenRepository.deleteById(member.getId());
-			redisUtil.setBlackList(accessToken, "access_token", 30 * 60 * 1000L);
-			return RestResponse.res(200, "로그아웃 성공");
+			Date expiration = jwtTokenProvider.getUserExpiration(accessToken);
+			Date now = new Date();
+			
+			redisUtil.setBlackList(accessToken, "access_token", expiration.getTime() - now.getTime());
+			return RestResponse.res(StatusCode.OK, "로그아웃 성공");
 		}else {
-			return RestResponse.res(401, "유효하지않은 토큰입니다.");
+			return RestResponse.res(StatusCode.BAD_REQUEST, "유효하지않은 토큰입니다.");
 		}
 	}
 

@@ -12,7 +12,6 @@ import com.example.Board.entity.RefreshToken;
 import com.example.Board.entity.RefreshTokenRepository;
 import com.example.Board.jwt.JwtTokenProvider;
 
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,22 +24,27 @@ public class TokenService {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	public TokenResponseDto refresh(String requestRefreshToken) {
-		String userPk = jwtTokenProvider.getUserPk(requestRefreshToken);
-		Long MemberId = Long.parseLong(userPk);
-		RefreshToken refreshTokenEntity = refreshTokenRepository.findByMemberId(MemberId);
 		
-		if (!jwtTokenProvider.validateToken(requestRefreshToken)) {
-			throw new JwtException(" 유효하지않은 토큰입니다.");
-		}else if (!requestRefreshToken.equals(refreshTokenEntity.getRefreshToken())) {
-			throw new IllegalStateException(" 존재하지 않는 정보입니다.");
-		} else {
-			Optional<Member> member = memberRepository.findById(MemberId);
-			String accessToken = jwtTokenProvider.createAccessToken(member.get().getEmail(), member.get().getRole()+"");
-			String refreshToken = jwtTokenProvider.createRefreshToken(member.get().getId()+"");
-			refreshTokenEntity.update(refreshToken);
+		if (jwtTokenProvider.validateToken(requestRefreshToken)) {
+			String userPk = jwtTokenProvider.getUserPk(requestRefreshToken);
+			Long MemberId = Long.parseLong(userPk);
+			RefreshToken refreshTokenEntity = refreshTokenRepository.findByMemberId(MemberId);
 			
-			return new TokenResponseDto(accessToken,refreshToken);
+			if (requestRefreshToken.equals(refreshTokenEntity.getRefreshToken())) {
+				Optional<Member> member = memberRepository.findById(MemberId);
+				String accessToken = jwtTokenProvider.createAccessToken(member.get().getEmail(), member.get().getRole()+"");
+				String refreshToken = jwtTokenProvider.createRefreshToken(member.get().getId()+"");
+				refreshTokenEntity.update(refreshToken);
+				
+				return new TokenResponseDto(accessToken,refreshToken);
+			} else {
+				throw new IllegalStateException("존재하지 않는 정보입니다.");
+			}
+			
+		}else {
+			throw new IllegalStateException("유효하지않은 토큰입니다.");
 		}
+		
 	}
 
 }

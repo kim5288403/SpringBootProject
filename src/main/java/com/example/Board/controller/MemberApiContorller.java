@@ -2,17 +2,23 @@ package com.example.Board.controller;
 
 
 
+import java.io.IOException;
+import java.util.Map;
+
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Board.dto.LoginRequestDto;
@@ -21,6 +27,7 @@ import com.example.Board.dto.MemberRequestDto;
 import com.example.Board.dto.MemberResponseDto;
 import com.example.Board.entity.Member;
 import com.example.Board.jwt.JwtTokenProvider;
+import com.example.Board.model.KaKaoService;
 import com.example.Board.model.MemberService;
 import com.example.Board.restfull.ResponseMessage;
 import com.example.Board.restfull.RestResponse;
@@ -38,6 +45,27 @@ public class MemberApiContorller {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+	KaKaoService kakaoService;
+    
+	@GetMapping(value = "/kakao")
+	public String kakaoLogin(@RequestParam String code, Model model) throws IOException {
+		System.out.println("code : " + code);
+		
+		String access_token = kakaoService.getToken(code);
+		Map<String, Object> userInfo = kakaoService.getUserInfo(access_token);
+		String getAgreementInfo = kakaoService.getAgreementInfo(access_token);
+
+		System.out.println("access_token : " + access_token);
+		System.out.println("userInfo : " + userInfo);
+		System.out.println("getAgreementInfo : " + getAgreementInfo);
+		
+		model.addAttribute("code", code);
+	    model.addAttribute("access_token", access_token);
+	    model.addAttribute("userInfo", userInfo);
+	     
+		return "main";
+	}
     
 	
 	@PostMapping(value = "join")

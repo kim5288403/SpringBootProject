@@ -34,7 +34,7 @@ public class KaKaoService {
 			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
 			sb.append("&client_id=5c78ab9195c6750c34b1a2fd56ad0da1");
-			sb.append("&redirect_uri=http://localhost:8080/member/kakao");
+			sb.append("&redirect_uri=http://localhost:8080/api/member/kakao");
 			sb.append("&code=" + code);
 			
 			bw.write(sb.toString());
@@ -97,16 +97,16 @@ public class KaKaoService {
 			
 			JSONParser parser = new JSONParser();
 			JSONObject obj = (JSONObject) parser.parse(res);
-//			JSONObject kakao_account = (JSONObject) obj.get("kakao_account");
-//			JSONObject properties = (JSONObject) obj.get("properties");
+			JSONObject kakao_account = (JSONObject) obj.get("kakao_account");
+			JSONObject properties = (JSONObject) obj.get("properties");
 			
 			String id = obj.get("id").toString();
-//			String nickname = properties.get("nickname").toString();
-//			String age_range = kakao_account.get("age_range").toString();
+			String nickname = properties.get("nickname").toString();
+			String email = kakao_account.get("email").toString();
 			
 			result.put("id", id);
-//			result.put("nickname", nickname);
-//			result.put("age_range", age_range);
+			result.put("nickname", nickname);
+			result.put("email", email);
 			
 			br.close();
 		} catch (Exception e) {

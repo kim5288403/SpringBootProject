@@ -49,7 +49,6 @@ public class KaKaoService {
 			while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("result = " + result);
 
             // json parsing
             JSONParser parser = new JSONParser();
@@ -93,7 +92,6 @@ public class KaKaoService {
 				res += line;
 			}
 			
-			System.out.println("res : " + res);
 			
 			JSONParser parser = new JSONParser();
 			JSONObject obj = (JSONObject) parser.parse(res);
@@ -103,10 +101,12 @@ public class KaKaoService {
 			String id = obj.get("id").toString();
 			String nickname = properties.get("nickname").toString();
 			String email = kakao_account.get("email").toString();
+			String gender = kakao_account.get("gender").toString().equals("male") ? "남" : "여";
 			
 			result.put("id", id);
 			result.put("nickname", nickname);
 			result.put("email", email);
+			result.put("gender", gender);
 			
 			br.close();
 		} catch (Exception e) {
@@ -115,36 +115,5 @@ public class KaKaoService {
 		
 		return result;
 	}
-	
-	public String getAgreementInfo(String access_token) {
-		String result = "";
-		String host = "https://kapi.kakao.com/v2/user/scopes";
-		try {
-			URL url = new URL(host);
-			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-			urlConnection.setRequestMethod("GET");
-			urlConnection.setRequestProperty("Authorization", "Bearer " + access_token);
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-			String line = "";
-			while((line = br.readLine()) != null) {
-				result += line;
-			}
-			
-			int responseCode = urlConnection.getResponseCode();
-			System.out.println("responseCode = " + responseCode);
-
-            // result is json format
-            br.close();
-		} catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		return result;
-	}
-	
 	
 }

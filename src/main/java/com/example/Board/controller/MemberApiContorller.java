@@ -45,28 +45,19 @@ public class MemberApiContorller {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    @Autowired
-	KaKaoService kakaoService;
+   
     
 	@GetMapping(value = "/kakao")
-	public String kakaoLogin(@RequestParam String code, Model model) throws IOException {
-		System.out.println("code : " + code);
-		
-		String access_token = kakaoService.getToken(code);
-		Map<String, Object> userInfo = kakaoService.getUserInfo(access_token);
-		String getAgreementInfo = kakaoService.getAgreementInfo(access_token);
+	public ResponseEntity<RestResponse<LoginResponseDto>> kakaoLogin(@RequestParam String code, Model model) throws IOException {
+		log.info("로그인 시도됨");
 
-		System.out.println("access_token : " + access_token);
-		System.out.println("userInfo : " + userInfo);
-		System.out.println("getAgreementInfo : " + getAgreementInfo);
-		
-		model.addAttribute("code", code);
-	    model.addAttribute("access_token", access_token);
-	    model.addAttribute("userInfo", userInfo);
-	     
-		return "main";
+		try {
+			LoginResponseDto loginResponseDto = memberService.kakaoLogin(code, passwordEncoder, jwtTokenProvider);
+			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, loginResponseDto), HttpStatus.OK);	
+		} catch (Exception e) {
+			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
+		}
 	}
-    
 	
 	@PostMapping(value = "join")
 	public ResponseEntity<RestResponse<MemberResponseDto>> join(@Valid @RequestBody MemberRequestDto memberDto, BindingResult bindingResult) {

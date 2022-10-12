@@ -13,13 +13,4 @@ public class BoardController {
 		return "/main";
 	}
 	
-	@RequestMapping(value = "/generic", method = RequestMethod.GET)
-	public String generic() {
-		return "elements";
-	}
-	
-	@RequestMapping(value = "/elements", method = RequestMethod.GET)
-	public String elements() {
-		return "generic";
-	}
 }

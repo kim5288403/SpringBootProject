@@ -3,11 +3,9 @@ package com.example.Board.controller;
 
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +25,6 @@ import com.example.Board.dto.MemberRequestDto;
 import com.example.Board.dto.MemberResponseDto;
 import com.example.Board.entity.Member;
 import com.example.Board.jwt.JwtTokenProvider;
-import com.example.Board.model.KaKaoService;
 import com.example.Board.model.MemberService;
 import com.example.Board.restfull.ResponseMessage;
 import com.example.Board.restfull.RestResponse;
@@ -50,7 +47,7 @@ public class MemberApiContorller {
 	@GetMapping(value = "/kakao")
 	public ResponseEntity<RestResponse<LoginResponseDto>> kakaoLogin(@RequestParam String code, Model model) throws IOException {
 		log.info("로그인 시도됨");
-
+	
 		try {
 			LoginResponseDto loginResponseDto = memberService.kakaoLogin(code, passwordEncoder, jwtTokenProvider);
 			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, loginResponseDto), HttpStatus.OK);	
@@ -80,7 +77,7 @@ public class MemberApiContorller {
 	@PostMapping(value = "login")
 	public ResponseEntity<RestResponse<LoginResponseDto>> login(@RequestBody LoginRequestDto loginDto) {
 		log.info("로그인 시도됨");
-
+		
 		try {
 			LoginResponseDto loginResponseDto = memberService.login(loginDto, passwordEncoder, jwtTokenProvider);
 			return new ResponseEntity<RestResponse<LoginResponseDto>>(RestResponse.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, loginResponseDto), HttpStatus.OK);	

@@ -114,18 +114,20 @@ public class MemberService implements UserDetailsService{
 			Map<String, Object> userInfo = kakaoService.getUserInfo(kakaoAccessToken);
 			String userEmail = userInfo.get("email")+"";
 			Member findMember = memberRepository.findByEmail(userEmail);
+			Long userId;
 			
 			if (findMember == null) {
 				MemberRequestDto memberDto = new MemberRequestDto(userInfo.get("nickname").toString(), userEmail, "", "", userInfo.get("gender").toString());
 				Member saveMember = MemberRequestDto.create(memberDto, passwordEncoder);
-				memberRepository.save(saveMember).getId();
+				userId = memberRepository.save(saveMember).getId();
+			}else {
+				userId = findMember.getId();
 			}
 			
-			Member member = memberRepository.findByEmail(userEmail);
 			String accessToken = jwtTokenProvider.createAccessToken(userEmail, "USER");
 			String refreshToken = jwtTokenProvider.createRefreshToken(userEmail);
 	
-			RefreshToken refreshTokenEntity = TokenRequestDto.create(member.getId(), refreshToken);
+			RefreshToken refreshTokenEntity = TokenRequestDto.create(userId, refreshToken);
 			refreshTokenRepository.save(refreshTokenEntity);
 			
 			return new LoginResponseDto(userEmail, accessToken, refreshToken);

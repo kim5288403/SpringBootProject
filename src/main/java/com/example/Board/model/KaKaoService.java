@@ -38,9 +38,6 @@ public class KaKaoService {
 			bw.write(sb.toString());
 			bw.flush();
 			
-			int responseCode = urlConnection.getResponseCode();
-			System.out.println("responseCode : " + responseCode);
-			
 			BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 			String line = "";
 			String result = "";
@@ -53,9 +50,6 @@ public class KaKaoService {
             JSONObject elem = (JSONObject) parser.parse(result);
 
             String access_token = elem.get("access_token").toString();
-            String refresh_token = elem.get("refresh_token").toString();
-            System.out.println("refresh_token = " + refresh_token);
-            System.out.println("access_token = " + access_token);
 
             token = access_token;
 

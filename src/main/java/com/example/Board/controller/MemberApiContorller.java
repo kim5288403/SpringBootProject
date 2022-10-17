@@ -43,7 +43,6 @@ public class MemberApiContorller {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
    
-    
 	@GetMapping(value = "/kakao")
 	public ResponseEntity<RestResponse<LoginResponseDto>> kakaoLogin(@RequestParam String code, Model model) throws IOException {
 		log.info("로그인 시도됨");

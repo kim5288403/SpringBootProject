@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,7 +63,8 @@ public class MemberService implements UserDetailsService{
 		validateDuplicateMember(member);
 		return memberRepository.save(member);
 	}
-
+	
+	@Cacheable(value = "Member", key="#member.getEmail()", cacheManager = "projectCacheManager")
 	private void validateDuplicateMember(Member member) {
 		Member findMember = memberRepository.findByEmail(member.getEmail());
 		if (findMember != null) {
@@ -69,6 +73,7 @@ public class MemberService implements UserDetailsService{
 	}
 
 	//로그인
+	@Cacheable(value = "Member", key="#loginDto.getEmail()", cacheManager = "projectCacheManager")
 	public LoginResponseDto login(LoginRequestDto loginDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
 		Member member = memberRepository.findByEmail(loginDto.getEmail());
 		validateDuplicateMemberLogin(member, loginDto, passwordEncoder);

@@ -22,7 +22,8 @@ public class TokenService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final MemberRepository memberRepository;
 	private final JwtTokenProvider jwtTokenProvider;
-
+	
+	
 	public TokenResponseDto refresh(String requestRefreshToken) {
 		
 		if (jwtTokenProvider.validateToken(requestRefreshToken)) {

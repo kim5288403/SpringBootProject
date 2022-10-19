@@ -46,6 +46,6 @@ repository를 clone 하고 IDE에서 애플리케이션을 실행해주세요.
   * Headers : { "Authorization" : "Bearer " + tokenData, "RefreshToken" : tokenData }  
 
 ## Detail  
-`blog` => https://limjyeok.tistory.com/m/category/Spring%20boot
+`상세설명` => https://limjyeok.tistory.com/m/category/Spring%20boot
 
 

@@ -43,6 +43,7 @@ public class MemberService implements UserDetailsService{
 	private final RedisUtil redisUtil;
 	private final KaKaoService kakaoService;
 
+	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Member member = memberRepository.findByEmail(email);

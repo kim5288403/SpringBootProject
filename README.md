@@ -1,8 +1,8 @@
 # SpringBootProject
-spring boot, security, jwt, redis, kakao login api 활용한 rest full 프로젝트
+spring boot, security, jwt, redis, cache, kakao login api 활용한 rest full 프로젝트
 
 ## Description  
-웹 프로젝트에 필요한 security, jwt, redis를 활용한 인증 및 인가 관리와 보안 그리고 security, jwt, kakao login open api를 활용한 소셜 로그인을 구현한 프로젝트입니다.
+웹 프로젝트 구현시 필요한 인증 및 인가 관리를 security, jwt, redis를 활용하여 구현한 프로젝트 입니다 또한 외부 API인 kakao login api를 활용해 소셜로그인도 구현 했습니다, 사용자의 중복된 요청을 막기 위해 redis의 cache를 활용해 중복된 요청을 막아 웹 프로젝트의 속도를 향상 시켰습니다.
 
 ## Environment
 > OS => Window  

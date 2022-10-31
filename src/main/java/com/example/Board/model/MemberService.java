@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
-import org.hibernate.annotations.Cache;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;

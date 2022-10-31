@@ -87,6 +87,8 @@ public class MemberApiContorller {
 	
 	@GetMapping(value = "logout") 
 	public <T> ResponseEntity<RestResponse<T>> logout (@RequestHeader(value="Authorization") String accessToken) {
+		log.info("로그아웃 시도됨");
+		
 		try {
 			RestResponse<T> res = memberService.logout(accessToken, jwtTokenProvider);
 			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.OK, res.getResponseMessage()), HttpStatus.OK);

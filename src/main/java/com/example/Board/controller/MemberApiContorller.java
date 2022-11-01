@@ -26,12 +26,14 @@ import com.example.Board.dto.MemberResponseDto;
 import com.example.Board.entity.Member;
 import com.example.Board.jwt.JwtTokenProvider;
 import com.example.Board.model.MemberService;
+import com.example.Board.model.SmsService;
 import com.example.Board.restfull.ResponseMessage;
 import com.example.Board.restfull.RestResponse;
 import com.example.Board.restfull.StatusCode;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Slf4j
 @RequestMapping("/api/member")
@@ -42,10 +44,11 @@ public class MemberApiContorller {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final SmsService smsService;
    
 	@GetMapping(value = "/kakao")
 	public ResponseEntity<RestResponse<LoginResponseDto>> kakaoLogin(@RequestParam String code, Model model) throws IOException {
-		log.info("로그인 시도됨");
+		log.info("카카오로그인 시도됨");
 	
 		try {
 			LoginResponseDto loginResponseDto = memberService.kakaoLogin(code, passwordEncoder, jwtTokenProvider);
@@ -96,5 +99,16 @@ public class MemberApiContorller {
 			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping(value = "message")
+	public <T> ResponseEntity<RestResponse<T>> send (@RequestParam(value = "to") String to){
+		try {
+			String number = smsService.pushMessage(to);
+			return  new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.OK, number), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	
 }

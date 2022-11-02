@@ -32,6 +32,8 @@ public class Member {
 
     private String password;
     
+    private String phone;
+    
     @Enumerated(EnumType.STRING)
     private Gender gender;
     
@@ -41,10 +43,11 @@ public class Member {
     private MemberRole role;
 
     @Builder
-    public Member (String name, String email, String password, String address, MemberRole role, Gender gender) {
+    public Member (String name, String email, String password, String phone, String address, MemberRole role, Gender gender) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.phone = phone;
         this.gender = gender;
         this.address = address;
         this.role = role;

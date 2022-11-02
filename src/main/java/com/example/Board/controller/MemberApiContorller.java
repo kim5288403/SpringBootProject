@@ -33,7 +33,6 @@ import com.example.Board.restfull.StatusCode;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Slf4j
 @RequestMapping("/api/member")
@@ -102,6 +101,8 @@ public class MemberApiContorller {
 	
 	@GetMapping(value = "message")
 	public <T> ResponseEntity<RestResponse<T>> send (@RequestParam(value = "to") String to){
+		log.info("인증번호 시도됨");
+		
 		try {
 			String number = smsService.pushMessage(to);
 			return  new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.OK, number), HttpStatus.OK);

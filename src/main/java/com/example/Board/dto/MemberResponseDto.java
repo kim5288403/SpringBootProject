@@ -15,6 +15,8 @@ public class MemberResponseDto {
 
 	private String password;
 
+	private String phone;
+
 	private String gender;
 
 	private String address;
@@ -24,6 +26,7 @@ public class MemberResponseDto {
 		this.name = memberRequestDto.getName();
 		this.email = memberRequestDto.getEmail();
 		this.password = memberRequestDto.getPassword();
+		this.phone = memberRequestDto.getPhone();
 		this.gender = memberRequestDto.getGender();
 		this.address = memberRequestDto.getAddress();
 	}

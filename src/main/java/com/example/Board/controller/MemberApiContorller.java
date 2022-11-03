@@ -104,8 +104,8 @@ public class MemberApiContorller {
 		log.info("인증번호 시도됨");
 		
 		try {
-			String number = smsService.pushMessage(to);
-			return  new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.OK, number), HttpStatus.OK);
+			String verificationCode = smsService.pushMessage(to);
+			return  new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.OK, verificationCode), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}

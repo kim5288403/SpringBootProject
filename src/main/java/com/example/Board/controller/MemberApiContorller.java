@@ -3,6 +3,7 @@ package com.example.Board.controller;
 
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.validation.Valid;
 
@@ -99,7 +100,7 @@ public class MemberApiContorller {
 		}
 	}
 	
-	@GetMapping(value = "message")
+	@GetMapping(value = "send")
 	public <T> ResponseEntity<RestResponse<T>> send (@RequestParam(value = "to") String to){
 		log.info("인증번호 시도됨");
 		
@@ -109,6 +110,12 @@ public class MemberApiContorller {
 		} catch (Exception e) {
 			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@PostMapping(value = "verification")
+	public <T> ResponseEntity<RestResponse<T>> verificationCode (@RequestBody HashMap<String,String> request){
+		System.out.println(request.get("verificationCode"));
+		return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, "gd"), HttpStatus.BAD_REQUEST);
 	}
 	
 	

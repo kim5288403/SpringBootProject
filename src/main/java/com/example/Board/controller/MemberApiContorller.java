@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Board.dto.CoolSmsRequestDto;
 import com.example.Board.dto.LoginRequestDto;
 import com.example.Board.dto.LoginResponseDto;
 import com.example.Board.dto.MemberRequestDto;
@@ -105,7 +106,7 @@ public class MemberApiContorller {
 		log.info("인증번호 시도됨");
 		
 		try {
-			String verificationCode = smsService.pushMessage(to);
+			String verificationCode = smsService.push(to);
 			return  new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.OK, verificationCode), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -113,8 +114,9 @@ public class MemberApiContorller {
 	}
 	
 	@PostMapping(value = "verification")
-	public <T> ResponseEntity<RestResponse<T>> verificationCode (@RequestBody HashMap<String,String> request){
-		System.out.println(request.get("verificationCode"));
+	public <T> ResponseEntity<RestResponse<T>> verificationCode (@RequestBody CoolSmsRequestDto request){
+		System.out.println(request.getVerificationCode());
+		System.out.println(request.getPhone());
 		return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, "gd"), HttpStatus.BAD_REQUEST);
 	}
 	

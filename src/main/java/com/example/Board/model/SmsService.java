@@ -20,7 +20,7 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 public class SmsService {
 	private final CoolSmsRepository coolSmsRepository;
 	
-	public String pushMessage(String to) throws CoolsmsException {
+	public String push(String to) throws CoolsmsException {
 		String api_key = "NCSWIIVMQVPJZEMF";
 		String api_secret = "F4RV6AZYFTRNLJSVIP1ECKJWGWHAH498";
 		Message message = new Message(api_key, api_secret);
@@ -45,4 +45,10 @@ public class SmsService {
 	    return verificationCode;
 		
 	}
+	
+	public String check () {
+		return "gd";
+	}
+		
+	
 }

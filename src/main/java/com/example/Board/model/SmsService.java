@@ -1,12 +1,16 @@
 package com.example.Board.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+
+import javax.validation.ValidationException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.Board.dto.CoolSmsRequestDto;
+import com.example.Board.dto.CoolSmsResponseDto;
 import com.example.Board.entity.CoolSms;
 import com.example.Board.entity.CoolSmsRepository;
 
@@ -46,8 +50,26 @@ public class SmsService {
 		
 	}
 	
-	public String check () {
-		return "gd";
+	public CoolSmsResponseDto check (CoolSmsRequestDto request) {
+		validateDuplicateCheck(request);
+		List<CoolSms> list = coolSmsRepository.findByPhoneAndVerificationCode(request.getPhone(), request.getVerificationCode());
+		if (list.isEmpty()) {
+			throw new IllegalStateException("존재하지 않은 인증번호 혹은 전화번호입니다.");
+		}
+		CoolSmsResponseDto response = new CoolSmsResponseDto(list.get(0).getPhone(), list.get(0).getVerificationCode());
+		
+		return response;
+	}
+	
+	public void validateDuplicateCheck(CoolSmsRequestDto request) {
+		if (request.getPhone().equals("")) {
+			throw new ValidationException("전화번호는 필수 값입니다.");
+		}
+		
+		if(request.getVerificationCode().equals("")) {
+			throw new ValidationException("인증번호는 필수 값입니다.");
+		}
+		
 	}
 		
 	

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Board.dto.CoolSmsRequestDto;
+import com.example.Board.dto.CoolSmsResponseDto;
 import com.example.Board.dto.LoginRequestDto;
 import com.example.Board.dto.LoginResponseDto;
 import com.example.Board.dto.MemberRequestDto;
@@ -114,10 +116,15 @@ public class MemberApiContorller {
 	}
 	
 	@PostMapping(value = "verification")
-	public <T> ResponseEntity<RestResponse<T>> verificationCode (@RequestBody CoolSmsRequestDto request){
-		System.out.println(request.getVerificationCode());
-		System.out.println(request.getPhone());
-		return new ResponseEntity<RestResponse<T>>(RestResponse.res(StatusCode.BAD_REQUEST, "gd"), HttpStatus.BAD_REQUEST);
+	public <T> ResponseEntity<RestResponse<CoolSmsResponseDto>> verificationCode (@RequestBody CoolSmsRequestDto request){
+		try {
+			CoolSmsResponseDto response = smsService.check(request);
+			return new ResponseEntity<RestResponse<CoolSmsResponseDto>>(RestResponse.res(StatusCode.OK, "인증성공", response), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<RestResponse<CoolSmsResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
+		}
+		
+		
 	}
 	
 	

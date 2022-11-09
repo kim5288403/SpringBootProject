@@ -25,6 +25,8 @@ public class SmsService {
 	private final CoolSmsRepository coolSmsRepository;
 	
 	public String push(String to) throws CoolsmsException {
+		validateDuplicateCheck(to);
+		
 		String api_key = "NCSWIIVMQVPJZEMF";
 		String api_secret = "F4RV6AZYFTRNLJSVIP1ECKJWGWHAH498";
 		Message message = new Message(api_key, api_secret);
@@ -47,8 +49,14 @@ public class SmsService {
 	    coolSmsRepository.save(coolSms);
 	    
 	    return verificationCode;
-		
 	}
+	
+	public void validateDuplicateCheck(String to) {
+		if (to.equals("")) {
+			throw new ValidationException("전화번호는 필수 값입니다.");
+		}
+	}
+	
 	
 	public CoolSmsResponseDto check (CoolSmsRequestDto request) {
 		validateDuplicateCheck(request);

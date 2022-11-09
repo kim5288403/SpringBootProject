@@ -3,10 +3,8 @@ package com.example.Board.controller;
 
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/member")
 @RestController
 @RequiredArgsConstructor
-public class MemberApiContorller {
+public class MemberApiController {
 	
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
@@ -105,7 +103,7 @@ public class MemberApiContorller {
 	
 	@GetMapping(value = "send")
 	public <T> ResponseEntity<RestResponse<T>> send (@RequestParam(value = "to") String to){
-		log.info("인증번호 시도됨");
+		log.info("인증 번호 요청 시도됨");
 		
 		try {
 			String verificationCode = smsService.push(to);
@@ -117,6 +115,8 @@ public class MemberApiContorller {
 	
 	@PostMapping(value = "verification")
 	public <T> ResponseEntity<RestResponse<CoolSmsResponseDto>> verificationCode (@RequestBody CoolSmsRequestDto request){
+		log.info("인증 번호 확인 시도됨");
+		
 		try {
 			CoolSmsResponseDto response = smsService.check(request);
 			return new ResponseEntity<RestResponse<CoolSmsResponseDto>>(RestResponse.res(StatusCode.OK, "인증성공", response), HttpStatus.OK);

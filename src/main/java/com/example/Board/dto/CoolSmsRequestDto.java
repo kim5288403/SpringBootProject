@@ -3,7 +3,6 @@ package com.example.Board.dto;
 import com.example.Board.entity.CoolSms;
 import com.sun.istack.NotNull;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +16,6 @@ public class CoolSmsRequestDto {
 
 	@NotNull
 	private String verificationCode; //인증번호
-	
 	
 	public static CoolSms create(String phone, String verificationCode) {
 		return CoolSms.builder()

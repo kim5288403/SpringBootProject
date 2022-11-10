@@ -57,14 +57,16 @@ public class SmsService {
 		}
 	}
 	
-	
 	public CoolSmsResponseDto check (CoolSmsRequestDto request) {
 		validateDuplicateCheck(request);
-		List<CoolSms> list = coolSmsRepository.findByPhoneAndVerificationCode(request.getPhone(), request.getVerificationCode());
-		if (list.isEmpty()) {
+		
+		CoolSms coolsms = coolSmsRepository.findByPhoneAndVerificationCode(request.getPhone(), request.getVerificationCode());
+
+		if (coolsms == null) {
 			throw new IllegalStateException("존재하지 않은 인증번호 혹은 전화번호입니다.");
 		}
-		CoolSmsResponseDto response = new CoolSmsResponseDto(list.get(0).getPhone(), list.get(0).getVerificationCode());
+		
+		CoolSmsResponseDto response = new CoolSmsResponseDto(coolsms.getPhone(), coolsms.getVerificationCode(), coolsms.getSendDate());
 		
 		return response;
 	}
@@ -79,6 +81,5 @@ public class SmsService {
 		}
 		
 	}
-		
-	
+			
 }

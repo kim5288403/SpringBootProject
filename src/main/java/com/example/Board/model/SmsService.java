@@ -1,5 +1,8 @@
 package com.example.Board.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -60,13 +63,11 @@ public class SmsService {
 	public CoolSmsResponseDto check (CoolSmsRequestDto request) {
 		validateDuplicateCheck(request);
 		
-		CoolSms coolsms = coolSmsRepository.findByPhoneAndVerificationCode(request.getPhone(), request.getVerificationCode());
-
-		if (coolsms == null) {
-			throw new IllegalStateException("존재하지 않은 인증번호 혹은 전화번호입니다.");
-		}
+		CoolSms coolSms = coolSmsRepository.findByPhoneAndVerificationCode(request.getPhone(), request.getVerificationCode());
 		
-		CoolSmsResponseDto response = new CoolSmsResponseDto(coolsms.getPhone(), coolsms.getVerificationCode(), coolsms.getSendDate());
+		validateDuplicateCoolSms(coolSms);
+		
+		CoolSmsResponseDto response = new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
 		
 		return response;
 	}
@@ -79,7 +80,19 @@ public class SmsService {
 		if(request.getVerificationCode().equals("")) {
 			throw new ValidationException("인증번호는 필수 값입니다.");
 		}
+	}
+	
+	public void validateDuplicateCoolSms(CoolSms coolsms) {
+		if (coolsms == null) {
+			throw new IllegalStateException("존재하지 않은 인증번호 혹은 전화번호입니다.");
+		}
 		
+		LocalDateTime Before = LocalDateTime.parse(coolsms.getSendDate()+"");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime After = Before.plusMinutes(3);
+		if (!now.isAfter(Before) || !now.isBefore(After)) {
+			throw new IllegalStateException("인증번호 확인 시간이 유효하지않습니다.");
+		}
 	}
 			
 }

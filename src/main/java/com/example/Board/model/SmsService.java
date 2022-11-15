@@ -67,9 +67,7 @@ public class SmsService {
 		
 		validateDuplicateCoolSms(coolSms);
 		
-		CoolSmsResponseDto response = new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
-		
-		return response;
+		return new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
 	}
 	
 	public void validateDuplicateCheck(CoolSmsRequestDto request) {
@@ -82,6 +80,7 @@ public class SmsService {
 		}
 	}
 	
+	//인증번호 확인 유효시간 검사
 	public void validateDuplicateCoolSms(CoolSms coolsms) {
 		if (coolsms == null) {
 			throw new IllegalStateException("존재하지 않은 인증번호 혹은 전화번호입니다.");

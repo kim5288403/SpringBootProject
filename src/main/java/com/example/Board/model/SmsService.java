@@ -1,10 +1,7 @@
 package com.example.Board.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 import javax.validation.ValidationException;
@@ -70,6 +67,7 @@ public class SmsService {
 		return new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
 	}
 	
+	//인징번호 확인 request 유효성 검사
 	public void validateDuplicateCheck(CoolSmsRequestDto request) {
 		if (request.getPhone().equals("")) {
 			throw new ValidationException("전화번호는 필수 값입니다.");
@@ -80,7 +78,7 @@ public class SmsService {
 		}
 	}
 	
-	//인증번호 확인 유효시간 검사
+	//인증번호 확인 유효성검사
 	public void validateDuplicateCoolSms(CoolSms coolsms) {
 		if (coolsms == null) {
 			throw new IllegalStateException("존재하지 않은 인증번호 혹은 전화번호입니다.");

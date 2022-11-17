@@ -67,7 +67,6 @@ public class SmsService {
 		return new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
 	}
 	
-	//인징번호 확인 request 유효성 검사
 	public void validateDuplicateCheck(CoolSmsRequestDto request) {
 		if (request.getPhone().equals("")) {
 			throw new ValidationException("전화번호는 필수 값입니다.");

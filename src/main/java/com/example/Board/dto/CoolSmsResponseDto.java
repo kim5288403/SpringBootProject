@@ -11,9 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CoolSmsResponseDto {
-	private String phone; //pk
+	private String phone;
 
-	private String verificationCode; //인증번호
+	private String verificationCode;
 	
 	private LocalDateTime sendDate;
 	

@@ -1,7 +1,5 @@
 package com.example.Board.controller;
 
-
-
 import java.io.IOException;
 
 import javax.validation.Valid;

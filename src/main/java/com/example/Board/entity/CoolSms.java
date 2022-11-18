@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class CoolSms {
 	
 	@Id
-	private String phone; //pk
+	private String phone;
 	
-	private String verificationCode; //인증번호
+	private String verificationCode;
 	
-	private LocalDateTime sendDate = LocalDateTime.now(); //전송시간
+	private LocalDateTime sendDate = LocalDateTime.now();
 	
 	@Builder
 	public CoolSms (String phone, String verificationCode) {

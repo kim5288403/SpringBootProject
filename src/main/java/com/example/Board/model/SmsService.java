@@ -44,6 +44,7 @@ public class SmsService {
 	    params.put("type", "sms");
 	    params.put("text", "인증번호는 [" + verificationCode + "] 입니다.");
 	    
+	    //문자 발송 테스트 시 주석 해제
 //	    message.send(params);
 	    CoolSms coolSms = CoolSmsRequestDto.create(to, verificationCode);
 	    coolSmsRepository.save(coolSms);

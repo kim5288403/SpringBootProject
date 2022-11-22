@@ -55,7 +55,6 @@ public class MemberService implements UserDetailsService{
 				.build();
 	}
 
-	//회원가입 
 	public Member save(Member member) {
 		validateDuplicateMember(member);
 		return memberRepository.save(member);
@@ -69,7 +68,6 @@ public class MemberService implements UserDetailsService{
 		}
 	}
 
-	//로그인
 	@Cacheable(value = "Member", key="#loginDto.getEmail()", cacheManager = "projectCacheManager")
 	public LoginResponseDto login(LoginRequestDto loginDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
 		Member member = memberRepository.findByEmail(loginDto.getEmail());
@@ -94,7 +92,6 @@ public class MemberService implements UserDetailsService{
 		}
 	}
 
-	//로그아웃
 	public <T> RestResponse<T> logout(String accessToken, JwtTokenProvider jwtTokenProvider) {
 		if (jwtTokenProvider.validateToken(accessToken)) {
 			Member member = memberRepository.findByEmail(jwtTokenProvider.getUserPk(accessToken));
@@ -109,7 +106,6 @@ public class MemberService implements UserDetailsService{
 		}
 	}
 	
-	//카카오 로그인
 	public LoginResponseDto kakaoLogin(String code, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
 		try {
 			String kakaoAccessToken = kakaoService.getToken(code);

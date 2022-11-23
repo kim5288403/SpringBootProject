@@ -60,7 +60,7 @@ public class MemberService implements UserDetailsService{
 		return memberRepository.save(member);
 	}
 	
-	@Cacheable(value = "Member", key="#member.getEmail()", cacheManager = "projectCacheManager")
+	@Cacheable(value = "Member", key = "#member.getEmail()", cacheManager = "projectCacheManager")
 	private void validateDuplicateMember(Member member) {
 		Member findMember = memberRepository.findByEmail(member.getEmail());
 		if (findMember != null) {
@@ -68,13 +68,13 @@ public class MemberService implements UserDetailsService{
 		}
 	}
 
-	@Cacheable(value = "Member", key="#loginDto.getEmail()", cacheManager = "projectCacheManager")
+	@Cacheable(value = "Member", key = "#loginDto.getEmail()", cacheManager = "projectCacheManager")
 	public LoginResponseDto login(LoginRequestDto loginDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
 		Member member = memberRepository.findByEmail(loginDto.getEmail());
 		validateDuplicateMemberLogin(member, loginDto, passwordEncoder);
 
-		String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getRole()+"");
-		String refreshToken = jwtTokenProvider.createRefreshToken(member.getId()+"");
+		String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getRole( )+ "");
+		String refreshToken = jwtTokenProvider.createRefreshToken(member.getId() + "");
 
 		RefreshToken refreshTokenEntity = TokenRequestDto.create(member.getId(), refreshToken);
 		refreshTokenRepository.save(refreshTokenEntity);
@@ -110,12 +110,12 @@ public class MemberService implements UserDetailsService{
 		try {
 			String kakaoAccessToken = kakaoService.getToken(code);
 			Map<String, Object> userInfo = kakaoService.getUserInfo(kakaoAccessToken);
-			String userEmail = userInfo.get("email")+"";
+			String userEmail = userInfo.get("email") + "";
 			Member findMember = memberRepository.findByEmail(userEmail);
 			Long userId;
 			
 			if (findMember == null) {
-				MemberRequestDto memberDto = new MemberRequestDto(userInfo.get("nickname").toString(), userEmail, "", "","", userInfo.get("gender").toString());
+				MemberRequestDto memberDto = new MemberRequestDto(userInfo.get("nickname").toString(), userEmail, "", "", "", userInfo.get("gender").toString());
 				Member saveMember = MemberRequestDto.create(memberDto, passwordEncoder);
 				userId = memberRepository.save(saveMember).getId();
 			}else {

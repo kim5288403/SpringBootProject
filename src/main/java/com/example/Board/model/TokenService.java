@@ -33,8 +33,8 @@ public class TokenService {
 			
 			if (requestRefreshToken.equals(refreshTokenEntity.getRefreshToken())) {
 				Optional<Member> member = memberRepository.findById(MemberId);
-				String accessToken = jwtTokenProvider.createAccessToken(member.get().getEmail(), member.get().getRole()+"");
-				String refreshToken = jwtTokenProvider.createRefreshToken(member.get().getId()+"");
+				String accessToken = jwtTokenProvider.createAccessToken(member.get().getEmail(), member.get().getRole() + "");
+				String refreshToken = jwtTokenProvider.createRefreshToken(member.get().getId() + "");
 				refreshTokenEntity.update(refreshToken);
 				
 				return new TokenResponseDto(accessToken,refreshToken);

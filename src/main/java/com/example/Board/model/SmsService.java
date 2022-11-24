@@ -35,7 +35,7 @@ public class SmsService {
 	    String verificationCode = "";
 	    for(int i=0; i<4; i++) {
 	       String ran = Integer.toString(rand.nextInt(10));
-	       verificationCode+=ran;
+	       verificationCode += ran;
 	    }        
 		
 	    HashMap<String, String> params = new HashMap<String, String>();

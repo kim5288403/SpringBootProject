@@ -23,8 +23,9 @@ public class TokenController {
 	private final TokenService tokenService;
 	
 	@PostMapping(value = "/refresh") 
-	public  ResponseEntity<RestResponse<TokenResponseDto>> refresh(@RequestHeader(value="RefreshToken") String refreshToken) {
+	public  ResponseEntity<RestResponse<TokenResponseDto>> refresh(@RequestHeader(value = "RefreshToken") String refreshToken) {
 		log.info("accessToken 재발급 시도됨");
+		
 		try {
 			TokenResponseDto tokenResponseDto = tokenService.refresh(refreshToken);
 			return new ResponseEntity<RestResponse<TokenResponseDto>>(RestResponse.res(StatusCode.OK, "재발급 성공하였습니다.", tokenResponseDto), HttpStatus.OK);

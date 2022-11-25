@@ -88,7 +88,7 @@ public class MemberApiController {
 	}
 	
 	@GetMapping(value = "logout") 
-	public <T> ResponseEntity<RestResponse<T>> logout (@RequestHeader(value="Authorization") String accessToken) {
+	public <T> ResponseEntity<RestResponse<T>> logout (@RequestHeader(value = "Authorization") String accessToken) {
 		log.info("로그아웃 시도됨");
 		
 		try {

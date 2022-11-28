@@ -12,10 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CoolSmsRequestDto {
 	@NotNull
-	private String phone; //pk
+	private String phone;
 
 	@NotNull
-	private String verificationCode; //인증번호
+	private String verificationCode;
 	
 	public static CoolSms create(String phone, String verificationCode) {
 		return CoolSms.builder()

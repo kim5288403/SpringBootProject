@@ -56,7 +56,7 @@ public class MemberRequestDto {
                 .email(memberDto.getEmail())
                 .gender(memberDto.getGender().equals("남") ? Gender.남 : Gender.여)
                 .address(memberDto.getAddress())
-                .password(passwordEncoder.encode(memberDto.getPassword()))  //암호화처리
+                .password(passwordEncoder.encode(memberDto.getPassword()))
                 .phone(memberDto.getPhone())
                 .role(MemberRole.USER)
                 .build();

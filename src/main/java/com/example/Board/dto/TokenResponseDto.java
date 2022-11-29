@@ -1,7 +1,5 @@
 package com.example.Board.dto;
 
-
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

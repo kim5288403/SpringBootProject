@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
-	private String secretKey = "myprojectsecret";
+	private String secretKey = "securitysecret";
 
 	private long accessTokenValidTime = 30 * 60 * 1000L;
 	private long RefreshtokenValidTime = 30 * 60 * 5000L;

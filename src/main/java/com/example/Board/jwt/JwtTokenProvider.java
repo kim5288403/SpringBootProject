@@ -26,7 +26,7 @@ public class JwtTokenProvider {
 	private String secretKey = "securitysecret";
 
 	private long accessTokenValidTime = 30 * 60 * 1000L;
-	private long RefreshtokenValidTime = 30 * 60 * 5000L;
+	private long RefreshtokenValidTime = 30 * 60 * 10000L;
 	private final RedisUtil redisUtil;
 	private final UserDetailsService userDetailsService;
 

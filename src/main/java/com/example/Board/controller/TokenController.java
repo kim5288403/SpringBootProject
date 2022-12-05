@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Board.dto.TokenResponseDto;
-import com.example.Board.model.TokenService;
 import com.example.Board.restfull.RestResponse;
 import com.example.Board.restfull.StatusCode;
+import com.example.Board.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

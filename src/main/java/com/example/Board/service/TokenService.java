@@ -1,4 +1,4 @@
-package com.example.Board.model;
+package com.example.Board.service;
 
 import java.util.Optional;
 

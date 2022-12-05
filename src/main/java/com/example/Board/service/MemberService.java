@@ -1,4 +1,4 @@
-package com.example.Board.model;
+package com.example.Board.service;
 
 import java.io.IOException;
 import java.util.Date;
@@ -39,7 +39,6 @@ public class MemberService implements UserDetailsService{
 	private final RedisUtil redisUtil;
 	private final KaKaoService kakaoService;
 
-	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Member member = memberRepository.findByEmail(email);
@@ -133,6 +132,4 @@ public class MemberService implements UserDetailsService{
 			throw new IllegalStateException("카카오 로그인 실패");
 		}
 	}
-
-
 }

@@ -25,11 +25,11 @@ import com.example.Board.dto.MemberRequestDto;
 import com.example.Board.dto.MemberResponseDto;
 import com.example.Board.entity.Member;
 import com.example.Board.jwt.JwtTokenProvider;
-import com.example.Board.model.MemberService;
-import com.example.Board.model.SmsService;
 import com.example.Board.restfull.ResponseMessage;
 import com.example.Board.restfull.RestResponse;
 import com.example.Board.restfull.StatusCode;
+import com.example.Board.service.MemberService;
+import com.example.Board.service.SmsService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,8 +121,6 @@ public class MemberApiController {
 		} catch (Exception e) {
 			return new ResponseEntity<RestResponse<CoolSmsResponseDto>>(RestResponse.res(StatusCode.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
-		
-		
 	}
 	
 	

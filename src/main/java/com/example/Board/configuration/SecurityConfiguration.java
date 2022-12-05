@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.Board.auth.CustomAuthenticationEntryPoint;
 import com.example.Board.jwt.JwtAuthenticationFilter;
 import com.example.Board.jwt.JwtTokenProvider;
-import com.example.Board.model.MemberService;
+import com.example.Board.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 

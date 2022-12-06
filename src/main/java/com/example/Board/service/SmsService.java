@@ -6,6 +6,7 @@ import java.util.Random;
 
 import javax.validation.ValidationException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +23,19 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 @Transactional
 @RequiredArgsConstructor
 public class SmsService {
+	
 	private final CoolSmsRepository coolSmsRepository;
 	
+	@Value("${cool.api.key}")
+	private String api_key;
+	
+	@Value("${cool.api.secret}")
+	private String api_secret;
+
+
 	public String push(String to) throws CoolsmsException {
 		validateDuplicateCheck(to);
 		
-		String api_key = "NCSWIIVMQVPJZEMF";
-		String api_secret = "F4RV6AZYFTRNLJSVIP1ECKJWGWHAH498";
 		Message message = new Message(api_key, api_secret);
 		
 		Random rand  = new Random();
@@ -46,6 +53,7 @@ public class SmsService {
 	    
 	    //문자 발송 테스트 시 주석 해제
 //	    message.send(params);
+	    
 	    CoolSms coolSms = CoolSmsRequestDto.create(to, verificationCode);
 	    coolSmsRepository.save(coolSms);
 	    
@@ -61,10 +69,10 @@ public class SmsService {
 	public CoolSmsResponseDto check (CoolSmsRequestDto request) {
 		CoolSms coolSms = validateDuplicateCheck(request);
 		
-	
 		return new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
 	}
 	
+	//유효성검사
 	public CoolSms validateDuplicateCheck(CoolSmsRequestDto request) {
 		if (request.getPhone().equals("")) {
 			throw new ValidationException("전화번호는 필수 값입니다.");
@@ -89,7 +97,5 @@ public class SmsService {
 		}
 		
 		return coolSms;
-	}
-	
-			
+	}	
 }

@@ -37,15 +37,9 @@ public class SmsService {
 		validateDuplicateCheck(to);
 		
 		Message message = new Message(api_key, api_secret);
-		
-		Random rand  = new Random();
-	    String verificationCode = "";
-	    for(int i=0; i<4; i++) {
-	       String ran = Integer.toString(rand.nextInt(10));
-	       verificationCode += ran;
-	    }        
-		
+		String verificationCode = getVerificationCode();
 	    HashMap<String, String> params = new HashMap<String, String>();
+	    
 	    params.put("to", to);
 	    params.put("from", "01073342383");
 	    params.put("type", "sms");
@@ -56,6 +50,17 @@ public class SmsService {
 	    
 	    CoolSms coolSms = CoolSmsRequestDto.create(to, verificationCode);
 	    coolSmsRepository.save(coolSms);
+	    
+	    return verificationCode;
+	}
+	
+	public String getVerificationCode() {
+		Random rand  = new Random();
+	    String verificationCode = "";
+	    for(int i=0; i<4; i++) {
+	       String ran = Integer.toString(rand.nextInt(10));
+	       verificationCode += ran;
+	    }
 	    
 	    return verificationCode;
 	}

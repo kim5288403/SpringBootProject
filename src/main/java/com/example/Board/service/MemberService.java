@@ -114,7 +114,7 @@ public class MemberService implements UserDetailsService{
 			Long userId;
 			
 			if (findMember == null) {
-				MemberRequestDto memberDto = new MemberRequestDto(userInfo.get("nickname").toString(), userEmail, "", "", "", userInfo.get("gender").toString());
+				MemberRequestDto memberDto = new MemberRequestDto(userInfo.get("nickname").toString(), userEmail, null, null, null, userInfo.get("gender").toString());
 				Member saveMember = MemberRequestDto.create(memberDto, passwordEncoder);
 				userId = memberRepository.save(saveMember).getId();
 			}else {

@@ -39,10 +39,12 @@ public class TokenService {
 				
 				return new TokenResponseDto(accessToken,refreshToken);
 			} else {
+				
 				throw new IllegalStateException("존재하지 않는 정보입니다.");
 			}
 			
-		}else {
+		} else {
+			
 			throw new IllegalStateException("유효하지않은 토큰입니다.");
 		}
 		

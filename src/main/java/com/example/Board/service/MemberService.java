@@ -72,7 +72,7 @@ public class MemberService implements UserDetailsService{
 		Member member = memberRepository.findByEmail(loginDto.getEmail());
 		validateDuplicateMemberLogin(member, loginDto, passwordEncoder);
 
-		String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getRole( )+ "");
+		String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getRole( ) + "");
 		String refreshToken = jwtTokenProvider.createRefreshToken(member.getId() + "");
 
 		RefreshToken refreshTokenEntity = TokenRequestDto.create(member.getId(), refreshToken);

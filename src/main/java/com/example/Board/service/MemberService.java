@@ -42,11 +42,11 @@ public class MemberService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Member member = memberRepository.findByEmail(email);
-
+		
 		if (member == null) {
 			throw new UsernameNotFoundException(email);
 		}
-
+		
 		return User.builder()
 				.username(member.getEmail())
 				.password(member.getPassword())
@@ -95,10 +95,11 @@ public class MemberService implements UserDetailsService{
 		if (jwtTokenProvider.validateToken(accessToken)) {
 			Member member = memberRepository.findByEmail(jwtTokenProvider.getUserPk(accessToken));
 			refreshTokenRepository.deleteById(member.getId());
+			
 			Date expiration = jwtTokenProvider.getUserExpiration(accessToken);
 			Date now = new Date();
-
 			redisUtil.setBlackList(accessToken, "access_token", expiration.getTime() - now.getTime());
+			
 			return RestResponse.res(StatusCode.OK, "로그아웃 성공");
 		}else {
 			return RestResponse.res(StatusCode.BAD_REQUEST, "유효하지않은 토큰입니다.");

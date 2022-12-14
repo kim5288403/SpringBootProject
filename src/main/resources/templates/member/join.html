@@ -59,11 +59,11 @@
         	 }
         	 
         	 $.ajax({
-        		 url: "/api/member/join",
+        		 url : "/api/member/join",
         		 method : "post",
-        		 data: JSON.stringify(obj),
-        		 contentType:'application/json;charset=utf-8',
-        		 dataType:'json',
+        		 data : JSON.stringify(obj),
+        		 contentType : 'application/json;charset=utf-8',
+        		 dataType : 'json',
         		 success : function(result) {
         			let code = result.statusCode;
 					let message = result.responseMessage;
@@ -71,7 +71,6 @@
 					if (code == 201) { 
 						window.location.href = "/member/login"
 					}
-					
 					
         		 },
         		 error : function(error) {

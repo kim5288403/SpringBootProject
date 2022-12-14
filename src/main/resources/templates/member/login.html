@@ -50,9 +50,9 @@
         		$.ajax({
         			url : "/api/member/login",
         			method : "post",
-        			data: JSON.stringify(obj),
-            		contentType:'application/json;charset=utf-8',
-            		dataType:'json',
+        			data : JSON.stringify(obj),
+            		contentType : 'application/json;charset=utf-8',
+            		dataType : 'json',
             		success : function(result) {
             			let code = result.statusCode;
     					let message = result.responseMessage;   

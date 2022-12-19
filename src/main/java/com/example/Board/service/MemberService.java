@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.Board.Vaildator.MemberValidator;
 import com.example.Board.auth.RedisUtil;
 import com.example.Board.dto.LoginRequestDto;
 import com.example.Board.dto.LoginResponseDto;
@@ -38,6 +39,9 @@ public class MemberService implements UserDetailsService{
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final RedisUtil redisUtil;
 	private final KaKaoService kakaoService;
+	
+	//validate
+	private final MemberValidator memberVaildator;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -55,16 +59,8 @@ public class MemberService implements UserDetailsService{
 	}
 
 	public Member save(Member member) {
-		validateDuplicateMember(member);
+		memberVaildator.validateDuplicateMember(member);
 		return memberRepository.save(member);
-	}
-	
-	@Cacheable(value = "Member", key = "#member.getEmail()", cacheManager = "projectCacheManager")
-	private void validateDuplicateMember(Member member) {
-		Member findMember = memberRepository.findByEmail(member.getEmail());
-		if (findMember != null) {
-			throw new IllegalStateException("이미 가입된 회원입니다.");
-		}
 	}
 
 	@Cacheable(value = "Member", key = "#loginDto.getEmail()", cacheManager = "projectCacheManager")

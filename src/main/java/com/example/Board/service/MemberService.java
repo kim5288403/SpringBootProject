@@ -44,12 +44,8 @@ public class MemberService implements UserDetailsService{
 	private final MemberValidator memberVaildator;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Member member = memberRepository.findByEmail(email);
-		
-		if (member == null) {
-			throw new UsernameNotFoundException(email);
-		}
+	public UserDetails loadUserByUsername(String email){
+		Member member = memberVaildator.validateDuplicateMember(email);
 		
 		return User.builder()
 				.username(member.getEmail())
@@ -59,7 +55,7 @@ public class MemberService implements UserDetailsService{
 	}
 
 	public Member save(Member member) {
-		memberVaildator.validateDuplicateMember(member);
+		memberVaildator.validateDuplicateMember(member.getEmail());
 		return memberRepository.save(member);
 	}
 

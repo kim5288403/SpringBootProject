@@ -1,7 +1,9 @@
 package com.example.Board.Vaildator;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.Board.entity.Member;
 import com.example.Board.entity.MemberRepository;
@@ -32,6 +34,22 @@ public class MemberValidator{
 			throw new IllegalStateException("이미 가입된 핸드폰 번호입니다.");
 		}
 	}
-
+	
+	public Member validateDuplicateEmail(String email) {
+		Member findMember = memberRepository.findByEmail(email);
+		
+		if (findMember == null) {
+			throw new BadCredentialsException("이메일 불일치");
+		}
+		
+		return findMember;
+	}
+	
+	public void validateDuplicatePassword(String memberPassword, String password, PasswordEncoder passwordEncoder) {
+		
+		if (!passwordEncoder.matches(password, memberPassword)) {
+			throw new BadCredentialsException("비밀번호 불일치");
+		}
+	}
 
 }

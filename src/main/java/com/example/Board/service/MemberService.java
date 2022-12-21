@@ -61,8 +61,8 @@ public class MemberService implements UserDetailsService{
 
 	@Cacheable(value = "Member", key = "#loginDto.getEmail()", cacheManager = "projectCacheManager")
 	public LoginResponseDto login(LoginRequestDto loginDto, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
-		Member member = memberRepository.findByEmail(loginDto.getEmail());
-		validateDuplicateMemberLogin(member, loginDto, passwordEncoder);
+		Member member = memberVaildator.validateDuplicateEmail(loginDto.getEmail());
+		memberVaildator.validateDuplicatePassword(member.getPassword(), loginDto.getPassword(), passwordEncoder);
 
 		String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getRole( ) + "");
 		String refreshToken = jwtTokenProvider.createRefreshToken(member.getId() + "");
@@ -71,16 +71,6 @@ public class MemberService implements UserDetailsService{
 		refreshTokenRepository.save(refreshTokenEntity);
 
 		return new LoginResponseDto(loginDto.getEmail(), accessToken,  refreshToken);
-	}
-	
-	private void validateDuplicateMemberLogin(Member member, LoginRequestDto loginDto, PasswordEncoder passwordEncoder) {
-		if (member == null) {
-			throw new BadCredentialsException("이메일 불일치");
-		}
-
-		if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-			throw new BadCredentialsException("비밀번호 불일치");
-		}
 	}
 
 	public <T> RestResponse<T> logout(String accessToken, JwtTokenProvider jwtTokenProvider) {

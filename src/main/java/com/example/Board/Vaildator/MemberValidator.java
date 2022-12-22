@@ -1,4 +1,4 @@
-package com.example.Board.Vaildator;
+package com.example.Board.vaildator;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,7 +16,7 @@ public class MemberValidator{
 	
 	private final MemberRepository memberRepository;
 	
-	@Cacheable(value = "Member", key = "#member.getEmail()", cacheManager = "projectCacheManager")
+	@Cacheable(value = "Member", key = "email", cacheManager = "projectCacheManager")
 	public Member validateDuplicateMember(String email) throws UsernameNotFoundException{
 		Member findMember = memberRepository.findByEmail(email);
 		
@@ -27,6 +27,7 @@ public class MemberValidator{
 		return findMember;
 	}
 	
+	@Cacheable(value = "Member", key = "phone", cacheManager = "projectCacheManager")
 	public void validateDuplicatePhone(String phone) {
 		Member findPhone = memberRepository.findByPhone(phone);
 		
@@ -35,6 +36,7 @@ public class MemberValidator{
 		}
 	}
 	
+	@Cacheable(value = "Member", key = "email", cacheManager = "projectCacheManager")
 	public Member validateDuplicateEmail(String email) {
 		Member findMember = memberRepository.findByEmail(email);
 		

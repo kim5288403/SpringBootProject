@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.Board.Vaildator.MemberValidator;
 import com.example.Board.auth.RedisUtil;
 import com.example.Board.dto.LoginRequestDto;
 import com.example.Board.dto.LoginResponseDto;
@@ -27,6 +26,7 @@ import com.example.Board.entity.RefreshTokenRepository;
 import com.example.Board.jwt.JwtTokenProvider;
 import com.example.Board.restfull.RestResponse;
 import com.example.Board.restfull.StatusCode;
+import com.example.Board.vaildator.MemberValidator;
 
 import lombok.RequiredArgsConstructor;
 

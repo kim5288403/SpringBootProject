@@ -1,10 +1,7 @@
 package com.example.Board.service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Random;
-
-import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -69,9 +66,10 @@ public class SmsService {
 	
 	
 	public CoolSmsResponseDto check (CoolSmsRequestDto request) {
-
-		
+		smsValidator.validateDuplicatePhone(request.getPhone());
+		smsValidator.validateDuplicateCode(request.getVerificationCode());
 		CoolSms coolSms = smsValidator.validateDuplicateCoolSms(request.getPhone(), request.getVerificationCode());
+		smsValidator.validateDuplicateSendDate(coolSms.getSendDate() + "");
 		
 		return new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
 	}

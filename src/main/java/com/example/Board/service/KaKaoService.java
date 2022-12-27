@@ -84,7 +84,6 @@ public class KaKaoService {
 				res += line;
 			}
 			
-			
 			JSONParser parser = new JSONParser();
 			JSONObject obj = (JSONObject) parser.parse(res);
 			JSONObject kakao_account = (JSONObject) obj.get("kakao_account");

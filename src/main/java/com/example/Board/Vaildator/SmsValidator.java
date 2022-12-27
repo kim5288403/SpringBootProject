@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.validation.ValidationException;
 
+import org.springframework.cache.annotation.Cacheable;
+
 import com.example.Board.entity.CoolSms;
 import com.example.Board.entity.CoolSmsRepository;
 
@@ -25,6 +27,7 @@ public class SmsValidator {
 		}
 	}
 	
+	@Cacheable(value = "CoolSms", key = "{phone, code}", cacheManager = "projectCacheMAnager")
 	public CoolSms validateDuplicateCoolSms(String phone, String code) {
 		CoolSms coolSms = coolSmsRepository.findByPhoneAndVerificationCode(phone, code);
 		

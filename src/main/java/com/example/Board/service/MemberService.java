@@ -5,11 +5,9 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,7 +96,7 @@ public class MemberService implements UserDetailsService{
 			
 			if (findMember == null) {
 				MemberRequestDto memberDto = new MemberRequestDto(userInfo.get("nickname").toString(), userEmail, null, null, null, userInfo.get("gender").toString());
-				Member saveMember = MemberRequestDto.create(memberDto, passwordEncoder);
+				Member saveMember = MemberRequestDto.create(memberDto, passwordEncoder);		
 				userId = memberRepository.save(saveMember).getId();
 			}else {
 				userId = findMember.getId();

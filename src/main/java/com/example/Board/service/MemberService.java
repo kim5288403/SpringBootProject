@@ -51,7 +51,7 @@ public class MemberService implements UserDetailsService{
 				.roles(member.getRole().toString())
 				.build();
 	}
-
+	
 	public Member save(Member member) {
 		memberVaildator.validateDuplicateMember(member.getEmail());
 		return memberRepository.save(member);

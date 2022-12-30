@@ -1,7 +1,10 @@
 package com.example.Board.service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Random;
+
+import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +14,6 @@ import com.example.Board.dto.CoolSmsRequestDto;
 import com.example.Board.dto.CoolSmsResponseDto;
 import com.example.Board.entity.CoolSms;
 import com.example.Board.entity.CoolSmsRepository;
-import com.example.Board.vaildator.SmsValidator;
 
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
@@ -23,7 +25,6 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 public class SmsService {
 	
 	private final CoolSmsRepository coolSmsRepository;
-	private final SmsValidator smsValidator;
 	
 	@Value("${cool.api.key}")
 	private String api_key;
@@ -33,7 +34,7 @@ public class SmsService {
 
 
 	public String push(String to) throws CoolsmsException {
-		smsValidator.validateDuplicatePhone(to);
+		validateDuplicateCheck(to);
 		
 		Message message = new Message(api_key, api_secret);
 		String verificationCode = getVerificationCode();
@@ -64,14 +65,42 @@ public class SmsService {
 	    return verificationCode;
 	}
 	
+	public void validateDuplicateCheck(String to) {
+		if (to.equals("")) {
+			throw new ValidationException("전화번호는 필수 값입니다.");
+		}
+	}
 	
 	public CoolSmsResponseDto check (CoolSmsRequestDto request) {
-		smsValidator.validateDuplicatePhone(request.getPhone());
-		smsValidator.validateDuplicateCode(request.getVerificationCode());
-		CoolSms coolSms = smsValidator.validateDuplicateCoolSms(request.getPhone(), request.getVerificationCode());
-		smsValidator.validateDuplicateSendDate(coolSms.getSendDate() + "");
+		CoolSms coolSms = validateDuplicateCheck(request);
 		
 		return new CoolSmsResponseDto(coolSms.getPhone(), coolSms.getVerificationCode(), coolSms.getSendDate());
 	}
+	
+	//유효성검사
+	public CoolSms validateDuplicateCheck(CoolSmsRequestDto request) {
+		if (request.getPhone().equals("")) {
+			throw new ValidationException("전화번호는 필수 값입니다.");
+		}
 		
+		if(request.getVerificationCode().equals("")) {
+			throw new ValidationException("인증번호는 필수 값입니다.");
+		}
+		
+		CoolSms coolSms = coolSmsRepository.findByPhoneAndVerificationCode(request.getPhone(), request.getVerificationCode());
+		
+		if (coolSms == null) {
+			throw new IllegalStateException("존재하지 않은 인증번호 혹은 전화번호입니다.");
+		}
+		
+		LocalDateTime Before = LocalDateTime.parse(coolSms.getSendDate()+"");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime After = Before.plusMinutes(3);
+		
+		if (!now.isAfter(Before) || !now.isBefore(After)) {
+			throw new IllegalStateException("인증번호 확인 시간이 유효하지않습니다.");
+		}
+		
+		return coolSms;
+	}	
 }
